@@ -5,8 +5,8 @@ import random
 pygame.init()
 
 # create the window
-width = 500
-height = 500
+width = 1366
+height = 768
 screen_size = (width, height)
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption('Car Game')
