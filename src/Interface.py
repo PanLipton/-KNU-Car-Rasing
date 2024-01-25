@@ -1,125 +1,115 @@
 import pygame
-import sys
+import pygame_gui
 
-class Menu:
+class GameMenu:
     def __init__(self):
-        # Инициализация pygame
         pygame.init()
 
-        # Инициализация микшера pygame
-        pygame.mixer.init()
-
-        # Конфигурация экрана
         self.WIDTH, self.HEIGHT = 1200, 800
+        self.window_surface = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.manager = pygame_gui.UIManager((self.WIDTH, self.HEIGHT))
+        self.clock = pygame.time.Clock()
 
-        # Опции меню
-        self.menu_items = ['Play', 'Settings', 'Exit']
-        self.settings_items = ['Volume Up', 'Volume Down', 'Back']
+        self.background = pygame.Surface((self.WIDTH, self.HEIGHT))
+        self.background.fill(pygame.Color('#000000'))
 
-        # Текущее состояние меню
         self.state = 'main'
-
-        # Громкость звука
         self.volume = 1.0
+
+        self.create_main_menu()
+        self.create_settings_menu()
+
+    def create_main_menu(self):
+        self.start_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 275), (100, 50)),
+            text='Play',
+            manager=self.manager)
+
+        self.settings_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 335), (100, 50)),
+            text='Settings',
+            manager=self.manager)
+
+        self.exit_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 395), (100, 50)),
+            text='Exit',
+            manager=self.manager)
+
+    def create_settings_menu(self):
+        self.volume_up_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 275), (150, 50)),
+            text='Volume Up',
+            manager=self.manager,
+            visible=False)
+
+        self.volume_down_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 335), (150, 50)),
+            text='Volume Down',
+            manager=self.manager,
+            visible=False)
+
+        self.back_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((350, 395), (100, 50)),
+            text='Back',
+            manager=self.manager,
+            visible=False)
+
+    def run(self):
+        running = True
+        while running:
+            time_delta = self.clock.tick(60)/1000.0
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    if self.state == 'main':
+                        if event.ui_element == self.start_button:
+                            print("Play the game")
+                        elif event.ui_element == self.settings_button:
+                            self.show_settings()
+                        elif event.ui_element == self.exit_button:
+                            running = False
+                    elif self.state == 'settings':
+                        if event.ui_element == self.volume_up_button:
+                            self.change_volume(0.1)
+                        elif event.ui_element == self.volume_down_button:
+                            self.change_volume(-0.1)
+                        elif event.ui_element == self.back_button:
+                            self.show_main_menu()
+
+                self.manager.process_events(event)
+
+            self.manager.update(time_delta)
+
+            self.window_surface.blit(self.background, (0, 0))
+            self.manager.draw_ui(self.window_surface)
+
+            pygame.display.update()
+
+    def show_main_menu(self):
+        self.state = 'main'
+        self.start_button.show()
+        self.settings_button.show()
+        self.exit_button.show()
+        self.volume_up_button.hide()
+        self.volume_down_button.hide()
+        self.back_button.hide()
+
+    def show_settings(self):
+        self.state = 'settings'
+        self.start_button.hide()
+        self.settings_button.hide()
+        self.exit_button.hide()
+        self.volume_up_button.show()
+        self.volume_down_button.show()
+        self.back_button.show()
 
     def change_volume(self, change):
         self.volume += change
-        self.volume = min(max(self.volume, 0.0), 1.0)  # Ограничиваем громкость от 0.0 до 1.0
-        pygame.mixer.music.set_volume(self.volume)
+        self.volume = min(max(self.volume, 0.0), 1.0)
+        print(f"Volume: {self.volume}")
 
-    def main(self):
-        screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption('Car Racing')
-
-        # Загрузка фонового изображения
-        background = pygame.image.load('../img/backgroundimg1.jpg')
-        background = pygame.transform.scale(background, (self.WIDTH, self.HEIGHT))
-
-        # Загрузка пиксельного шрифта
-        title_font = pygame.font.Font('../fonts/pixel_font.ttf', 100)
-        pixel_font = pygame.font.Font('../fonts/pixel_font.ttf', 36)
-
-        selected_item = 0
-        vertical_spacing = 60  # Интервал между кнопками
-
-        while True:
-            # Отображение фонового изображения
-            screen.blit(background, (0, 0))
-
-            title_label = title_font.render("Car Racing", True, (255, 255, 255))
-            screen.blit(title_label,
-                        (self.WIDTH // 2 - title_label.get_width() // 2, self.HEIGHT // 4 - title_label.get_height() // 2))
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP and selected_item > 0:
-                        selected_item -= 1
-                    elif event.key == pygame.K_DOWN and selected_item < len(self.menu_items) - 1:
-                        selected_item += 1
-                    elif event.key == pygame.K_RETURN:
-                        if self.state == 'main':
-                            if self.menu_items[selected_item] == 'Exit':
-                                pygame.quit()
-                                sys.exit()
-                            elif self.menu_items[selected_item] == 'Settings':
-                                self.state = 'settings'
-                                selected_item = 0
-                            else:
-                                print(f"Вы выбрали {self.menu_items[selected_item]}")
-                        elif self.state == 'settings':
-                            if self.settings_items[selected_item] == 'Back':
-                                self.state = 'main'
-                                selected_item = 0
-                            elif self.settings_items[selected_item] == 'Volume Up':
-                                self.change_volume(0.1)  # Увеличиваем громкость на 0.1
-                            elif self.settings_items[selected_item] == 'Volume Down':
-                                self.change_volume(-0.1)  # Уменьшаем громкость на 0.1
-                            else:
-                                print(f"Вы выбрали {self.settings_items[selected_item]}")
-
-            items = self.menu_items if self.state == 'main' else self.settings_items
-
-            for index, item in enumerate(items):
-                color = (255, 255, 255)
-
-                # Получение координат курсора
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-
-                # Проверка, находится ли курсор над текущей кнопкой
-                if (self.WIDTH // 2 - pixel_font.size(item)[0] // 2) < mouse_x < (self.WIDTH // 2 + pixel_font.size(item)[0] // 2) and \
-                        (self.HEIGHT // 2 - pixel_font.size(item)[1] // 2 + index * vertical_spacing) < mouse_y < \
-                        (self.HEIGHT // 2 - pixel_font.size(item)[1] // 2 + (index + 1) * vertical_spacing):
-                    color = (255, 0, 0)  # Красный цвет при наведении
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if self.state == 'main':
-                            if item == 'Exit':
-                                pygame.quit()
-                                sys.exit()
-                            elif item == 'Settings':
-                                self.state = 'settings'
-                            else:
-                                print(f"Вы выбрали {item}")
-                        elif self.state == 'settings':
-                            if item == 'Back':
-                                self.state = 'main'
-                            elif item == 'Volume Up':
-                                self.change_volume(0.1)  # Увеличиваем громкость на 0.1
-                            elif item == 'Volume Down':
-                                self.change_volume(-0.1)  # Уменьшаем громкость на 0.1
-                            else:
-                                print(f"Вы выбрали {item}")
-
-                label = pixel_font.render(item, True, color)
-                screen.blit(label,
-                            (self.WIDTH // 2 - label.get_width() // 2, self.HEIGHT // 2 - label.get_height() // 2 + index * vertical_spacing))
-
-            # Обновление дисплея
-            pygame.display.flip()
-
-
-if __name__ == "__main__":
-    menu = Menu()
-    menu.main()
+if __name__ == '__main__':
+    game_menu = GameMenu()
+    game_menu.run()
