@@ -55,7 +55,7 @@ class AActor(pygame.sprite.Sprite):
         return direction_vector.normalize()
 
 
-    
+"""
 #test AActor game loop
 
 #init game
@@ -96,4 +96,4 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-
+"""
