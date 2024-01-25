@@ -16,16 +16,17 @@ class AActor(pygame.sprite.Sprite):
 
     def __init__(self,screen,image,x,y,w,h):
         super().__init__()
-        self.x = x;
-        self.y = y;
-        self.w = w;
-        self.h = h;
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
         self.BoxCollision = UBoxCollision(screen,x,y,w,h,"Orange")
         self.rect = pygame.Rect(x,y,w,h)
         script_directory = os.path.dirname(os.path.abspath("../"))
         player_image_path = os.path.join("assets/cars",image)
         self.image = pygame.image.load(os.path.join(script_directory, player_image_path))
         self.FRotator = Vector2(1, 0)
+    # TODO: fix rotation
     def draw(self):
         # Calculate the rotation angle based on the FRotator
         angle = math.degrees(math.atan2(-self.FRotator.y, self.FRotator.x))
