@@ -5,7 +5,7 @@ from pygame.locals import *
 #BoxCollision class: This class defines a basic collision which is uded in Character
 #To write a login on collision events
 
-class BoxCollision(pygame.Rect):
+class UBoxCollision(pygame.Rect):
     #width of BoxCollision
     w=0
     h=0
