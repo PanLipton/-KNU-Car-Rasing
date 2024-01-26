@@ -63,7 +63,7 @@ class UBoxCollision(pygame.Rect):
     #Check Collision itteraction
     def itteract(self,collision):
         return self.__itteract(collision)
-    def simple_itteract(self,collision):
+    def simple_itteract(self,collision:pygame.Rect):
         return self.colliderect(collision)
     def setCoordinates(self,NewCoordinates:Vector2):
         self.x = NewCoordinates[0]
