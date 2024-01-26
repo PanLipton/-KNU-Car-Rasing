@@ -16,7 +16,7 @@ class Menu:
         pygame.display.set_caption('Car Racing')
 
         # Загрузка фонового изображения
-        self.background = pygame.image.load('../img/backgroundimg1.jpg')
+        self.background = pygame.image.load('../assets/img/backgroundimg1.jpg')
         self.background = pygame.transform.scale(self.background, (self.WIDTH, self.HEIGHT))
 
         # Загрузка пиксельного шрифта
