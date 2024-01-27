@@ -23,6 +23,7 @@ road1 = Road(selected_road_image, screen_width, screen_height)
 road2 = Road(selected_road_image, screen_width, screen_height)
 road2.rect.y = -road2.rect.height  # Початкова позиція другої дороги
 
+# left_edge, right_edge = road1.get_edge_coordinates() # Отримання кординат для дороги
 
 # Основний цикл гри
 running = True

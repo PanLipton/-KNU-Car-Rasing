@@ -23,5 +23,11 @@ class Road(pygame.sprite.Sprite):
 
         if self.rect.top >= self.screen_height:
             self.rect.y = -self.screen_height + int(self.y_offset)
-
+    def get_edge_coordinates(self):
+        # Повертає кортеж з лівої та правої координат X країв дороги.
+        center_x = self.rect.centerx
+        half_width = self.rect.width // 2
+        left_edge = center_x - half_width
+        right_edge = center_x + half_width
+        return left_edge, right_edge
 
