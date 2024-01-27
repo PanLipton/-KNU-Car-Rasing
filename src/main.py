@@ -4,7 +4,7 @@ from road import Road
 
 # Встановлення параметрів екрану
 screen_width = 1366
-screen_height = 768
+screen_height = 900
 screen = pygame.display.set_mode((screen_width, screen_height))
 # Словник з зображеннями доріг для різної кількості гравців
 roads_images = {
@@ -13,7 +13,7 @@ roads_images = {
 }
 
 # Умовна змінна кількості гравців
-player_count = 1
+player_count = 2
 
 # Вибір зображення дороги в залежності від кількості гравців
 selected_road_image = roads_images.get(player_count, '../assets/img/road-5-lines.png')  
@@ -23,6 +23,7 @@ road1 = Road(selected_road_image, screen_width, screen_height)
 road2 = Road(selected_road_image, screen_width, screen_height)
 road2.rect.y = -road2.rect.height  # Початкова позиція другої дороги
 
+# left_edge, right_edge = road1.get_edge_coordinates() # Отримання кординат для дороги
 
 # Основний цикл гри
 running = True
@@ -32,7 +33,7 @@ while running:
             running = False
     
     # Оновлення позицій дороги
-    road_speed = 0.5  # Швидкість 
+    road_speed = 0.65  # Швидкість 
     road1.update(road_speed)
     road2.update(road_speed)
 
