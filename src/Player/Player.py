@@ -59,6 +59,7 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+    #Intersects with BoxCollision
     def Intersects(self,Location:Vector2,obstacles:pygame.sprite.Group()):
         temp_Collision = UBoxCollision(self.screen,Location[0],Location[1],self._w,self._h,'Orange')
         for sprite in obstacles:
@@ -66,6 +67,8 @@ class APlayer(AActor):
                 if(temp_Collision.simple_itteract(sprite.BoxCollision)):
                    return True
         return False
+    
+    
             
         
 
