@@ -59,6 +59,15 @@ class SettingsMenu(BaseMenu):
     def __init__(self, screen, title_font, pixel_font, background):
         super().__init__(screen, title_font, pixel_font, background)
 
+        # Добавленные элементы
+        self.volume_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 80), (200, 30)),
+            text='Volume',
+            manager=self.gui_manager,
+            container=self.gui_manager.get_root_container(),
+            object_id='no_border_label'  # Используем object_id для указания стиля
+        )
+
         self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 40), (200, 20)),
             start_value=50,
@@ -106,7 +115,7 @@ class Menu:
 
         # Загрузка пиксельного шрифта
         self.title_font = pygame.font.Font('../../assets/fonts/pixel_font.ttf', 100)
-        self.pixel_font = pygame.font.Font('../../assets/fonts/pixel_font.ttf', 36)
+        self.pixel_font = pygame.font.Font('../../assets/fonts/pixel_font.ttf', 20)  # Изменение размера для надписи "Volume"
 
         self.current_menu = MainMenu(self.screen, self.title_font, self.pixel_font, self.background)
 
@@ -120,7 +129,7 @@ class Menu:
                 if event.type == pygame.QUIT:
                     is_running = False
                 if event.type == pygame.USEREVENT:
-                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                    if event.type == pygame.USEREVENT and event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         new_menu = self.current_menu.handle_event(event.ui_element)
                         if new_menu:
                             self.current_menu = new_menu
