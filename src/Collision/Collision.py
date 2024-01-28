@@ -1,6 +1,7 @@
 import pygame #imort pygame module
 from sys import exit #imort sys module
 from pygame.locals import *
+from pygame.math import Vector2
 
 #BoxCollision class: This class defines a basic collision which is uded in Character
 #To write a login on collision events
@@ -57,11 +58,16 @@ class UBoxCollision(pygame.Rect):
         
     #draw Collision (May be used in Debug mode)    
     def draw(self):
-        pygame.draw.rect(screen,self.color,self,1)
+        pygame.draw.rect(self.screen,self.color,pygame.Rect(self.x,self.y,self.w,self.h),1)
         
     #Check Collision itteraction
     def itteract(self,collision):
         return self.__itteract(collision)
+    def simple_itteract(self,collision):
+        return self.colliderect(collision)
+    def setCoordinates(self,NewCoordinates:Vector2):
+        self.x = NewCoordinates[0]
+        self.y = NewCoordinates[1]
     
 """    
 #test Collision game loop

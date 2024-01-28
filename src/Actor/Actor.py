@@ -6,13 +6,9 @@ from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
 
-sys.path.append("../Collision/")
-
-from Collision import *
 
 class AActor(pygame.sprite.Sprite):
     screen=None
-    BoxCollision=None
 
     def __init__(self,screen,image,x,y,w,h):
         super().__init__()
@@ -20,24 +16,24 @@ class AActor(pygame.sprite.Sprite):
         self.y = y
         self.w = w
         self.h = h
-        self.BoxCollision = UBoxCollision(screen,x,y,w,h,"Orange")
+        self.image = image
+        self.image = pygame.transform.scale(image,(w,h))
+        self.screen = screen
         self.rect = pygame.Rect(x,y,w,h)
-        script_directory = os.path.dirname(os.path.abspath("../"))
-        player_image_path = os.path.join("assets/cars",image)
-        self.image = pygame.image.load(os.path.join(script_directory, player_image_path))
-        self.FRotator = 0
+        self.FRotator = 90
     def draw(self):
         # Calculate the rotation angle based on the FRotator
         angle = self.FRotator
         rotated_image = pygame.transform.rotate(self.image, angle-90)
         self.rect = self.image.get_rect(center=(self.x,self.y))
         # Blit the rotated image using the new center position
-        screen.blit(rotated_image, self.rect.center)
+        self.screen.blit(rotated_image, self.rect.center)
 
     def getActorLocation(self)->Vector2:
-        return Vector2(self.rect.center)
+        return Vector2(self.x,self.y)
     def setActorLocation(self,Location:Vector2):
-        self.rect.center = Location
+        self.x = Location[0]
+        self.y = Location[1]
     def getActorRotation(self) -> float:
         return self.FRotator
 
