@@ -24,7 +24,6 @@ class APlayer(AActor):
         super().__init__(self.screen,self.image,x,y,w,h)
         #Create Box Collision
         self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
-
     #Drawing 
     def draw(self):
         super().draw()
@@ -59,19 +58,19 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+    def getCollision(self)->UBoxCollision:
+        return self.BoxCollision
     #Intersects with BoxCollision
     def Intersects(self,Location:Vector2,obstacles:pygame.sprite.Group()):
         temp_Collision = UBoxCollision(self.screen,Location[0],Location[1],self._w,self._h,'Orange')
         for sprite in obstacles:
             if(not sprite == self):
-                if(temp_Collision.simple_itteract(sprite.BoxCollision)):
-                   return True
+                if(temp_Collision.itteract(sprite.getCollision())):
+                    return True
         return False
-    
-    
+
             
         
-
 
 """
 #test APlayer game loop
@@ -105,13 +104,13 @@ while True:
             exit()
         keys = pygame.key.get_pressed()
         if keys[K_LEFT]:
-            player.MoveLeft(100,all_sprites)
+            player.MoveLeft(10,all_sprites)
         if keys[K_RIGHT]:
-            player.MoveRight(100,all_sprites)
+            player.MoveRight(10,all_sprites)
         if keys[K_DOWN]:
-            player.MoveDown(100,all_sprites)
+            player.MoveDown(10,all_sprites)
         if keys[K_UP]:
-            player.MoveUP(200,all_sprites)
+            player.MoveUP(10,all_sprites)
     
     screen.fill([255, 255, 255])
     player.draw()
@@ -120,5 +119,5 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-
 """
+

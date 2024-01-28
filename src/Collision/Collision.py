@@ -17,27 +17,6 @@ class UBoxCollision(pygame.Rect):
     screen=None;
     #Color
     color=None;
-    #private itteract method
-    def __itteract(self,collision):
-        if(self.colliderect(collision)):
-            # Determine collision direction
-            dx = self.x - collision.x
-            dy = self.y - collision.y
-            if abs(dx) > abs(dy):
-                if dx > 0:
-                    #right
-                    return 2
-                else:
-                    #left
-                    return -2
-            else:
-                if dy > 0:
-                    #top
-                    return 1
-                else:
-                    #bottom
-                    return -1
-        return 0
     #Constructor
     def __init__(self,screen,x,y,w,h,color):
         super().__init__(x, y, w, h)
@@ -62,12 +41,11 @@ class UBoxCollision(pygame.Rect):
         
     #Check Collision itteraction
     def itteract(self,collision):
-        return self.__itteract(collision)
-    def simple_itteract(self,collision:pygame.Rect):
         return self.colliderect(collision)
     def setCoordinates(self,NewCoordinates:Vector2):
         self.x = NewCoordinates[0]
         self.y = NewCoordinates[1]
+    
     
 """    
 #test Collision game loop
