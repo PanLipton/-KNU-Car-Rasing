@@ -1,6 +1,3 @@
-<<<<<<< HEAD
 .DS_Store
-
-=======
-.DS_Store
->>>>>>> main
+src/Actor/__pycache__/*
+src/Collision/__pycache__/*
