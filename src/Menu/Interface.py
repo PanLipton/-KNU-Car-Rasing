@@ -68,16 +68,36 @@ class SettingsMenu(BaseMenu):
             object_id='no_border_label'  # Используем object_id для указания стиля
         )
 
-        self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 40), (200, 20)),
-            start_value=50,
-            value_range=(0, 100),
+        # self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
+        #     relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 40), (200, 20)),
+        #     start_value=50,
+        #     value_range=(0, 100),
+        #     manager=self.gui_manager,
+        #     container=self.gui_manager.get_root_container(),
+        #     object_id='no_border_button'
+        # )
+
+        # Добавляем кнопки Volume Up и Volume Down
+        self.volume_up_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 40),
+                                      (200, 30)),
+            text='Volume Up',
             manager=self.gui_manager,
             container=self.gui_manager.get_root_container(),
             object_id='no_border_button'
         )
-        self.back_button = pygame_gui.elements.UIButton(
+
+        self.volume_down_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2), (200, 30)),
+            text='Volume Down',
+            manager=self.gui_manager,
+            container=self.gui_manager.get_root_container(),
+            object_id='no_border_button'
+        )
+
+        self.back_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 + 40),
+                                      (200, 30)),
             text='Back',
             manager=self.gui_manager,
             container=self.gui_manager.get_root_container(),
@@ -87,6 +107,12 @@ class SettingsMenu(BaseMenu):
     def handle_event(self, ui_element):
         if ui_element == self.back_button:
             return MainMenu(self.screen, self.title_font, self.pixel_font, self.background)
+        elif ui_element == self.volume_up_button:
+            # Обработка увеличения громкости
+            print("Volume Up button pressed")
+        elif ui_element == self.volume_down_button:
+            # Обработка уменьшения громкости
+            print("Volume Down button pressed")
 
     def draw(self):
         self.screen.blit(self.background, (0, 0))
