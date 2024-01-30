@@ -54,8 +54,8 @@ class APlayer(AActor):
         cur_Location[0]-=distance
         self.BoxCollision.setCoordinates(cur_Location)
         super().setActorLocation(cur_Location)
-    def Intersects(collision:UBoxCollision):
-        if(self.BoxCollision.simple_itteract(collision)):
+    # def Intersects(collision:UBoxCollision):
+    #     if(self.BoxCollision.simple_itteract(collision)):
             
         
 
