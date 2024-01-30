@@ -25,29 +25,34 @@ class AActor(pygame.sprite.Sprite):
         script_directory = os.path.dirname(os.path.abspath("../"))
         player_image_path = os.path.join("assets/cars",image)
         self.image = pygame.image.load(os.path.join(script_directory, player_image_path))
-        self.FRotator = 0
+        self.FRotator = Vector2(1, 0)
+    # TODO: fix rotation
     def draw(self):
         # Calculate the rotation angle based on the FRotator
-        angle = self.FRotator
-        rotated_image = pygame.transform.rotate(self.image, angle-90)
-        self.rect = self.image.get_rect(center=(self.x,self.y))
-        # Blit the rotated image using the new center position
-        screen.blit(rotated_image, self.rect.center)
+        angle = math.degrees(math.atan2(-self.FRotator.y, self.FRotator.x))
+        rotated_image = pygame.transform.rotate(self.image, angle)
+        rotated_rect = rotated_image.get_rect(center=self.rect.center)
+
+        # Adjust midtop position based on rotation
+        rotated_midtop = rotated_rect.midtop
+        offset = Vector2(self.rect.midtop) - Vector2(rotated_midtop)
+        rotated_rect.midtop += offset
+
+        # Blit the rotated image using the new midtop position
+        screen.blit(rotated_image, rotated_rect.center)
+
 
     def getActorLocation(self)->Vector2:
         return Vector2(self.rect.center)
     def setActorLocation(self,Location:Vector2):
         self.rect.center = Location
-    def getActorRotation(self) -> float:
+    def getActorRotation(self)->Vector2:
         return self.FRotator
-
-    def setActorRotation(self, angle: float):
-        self.FRotator = angle
-
-    def FindLookAtRotation(self, start: Vector2, end: Vector2) -> float:
-        # Calculate the rotation angle in degrees
-        direction_vector = end - start
-        return math.degrees(math.atan2(direction_vector.y, direction_vector.x))
+    def setActorRotation(self, FRotator: Vector2):
+        self.FRotator = FRotator
+    def FindLookAtRotation(self,Start:Vector2,End:Vector2)->Vector2:
+        direction_vector = End - Start
+        return direction_vector.normalize()
 
 
 """
@@ -78,11 +83,13 @@ while True:
         move_y = keys[pygame.K_DOWN] - keys[pygame.K_UP]
         actor.setActorLocation((move_x * 5, move_y * 5))
     # Get the mouse position as the target point
-    target_point = Vector2(pygame.mouse.get_pos())
+    target_point = Vector2(500,500)
 
-    # Set player rotation based on the target point
-    #print(actor.FindLookAtRotation(actor.getActorLocation(), target_point))
-    actor.setActorRotation(-actor.FindLookAtRotation(actor.getActorLocation(), target_point))
+    # Find rotation vector towards the target point
+    player_rotation_vector = actor.FindLookAtRotation(actor.getActorLocation(), target_point)
+
+    # Set player rotation based on the rotation vector
+    actor.setActorRotation(player_rotation_vector)
     
     screen.fill([255, 255, 255])
     actor.draw()
