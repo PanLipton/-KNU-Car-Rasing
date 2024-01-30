@@ -38,16 +38,6 @@ class AActor(pygame.sprite.Sprite):
     def setActorLocation(self,Location:Vector2):
         self._x = Location[0]
         self._y = Location[1]
-    def getActorRotation(self) -> float:
-        return self.FRotator
-
-    def setActorRotation(self, angle: float):
-        self.FRotator = angle
-
-    def FindLookAtRotation(self, start: Vector2, end: Vector2) -> float:
-        # Calculate the rotation angle in degrees
-        direction_vector = end - start
-        return math.degrees(math.atan2(direction_vector.y, direction_vector.x))
 
 
 """
