@@ -16,33 +16,6 @@ class AActor(pygame.sprite.Sprite):
     _rect = pygame.Rect(0,0,0,0)
     def __init__(self,screen,image,x,y,w,h):
         super().__init__()
-<<<<<<< HEAD
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.BoxCollision = UBoxCollision(screen,x,y,w,h,"Orange")
-        self.rect = pygame.Rect(x,y,w,h)
-        script_directory = os.path.dirname(os.path.abspath("../"))
-        player_image_path = os.path.join("assets/cars",image)
-        self.image = pygame.image.load(os.path.join(script_directory, player_image_path))
-        self.FRotator = Vector2(1, 0)
-    # TODO: fix rotation
-    def draw(self):
-        # Calculate the rotation angle based on the FRotator
-        angle = math.degrees(math.atan2(-self.FRotator.y, self.FRotator.x))
-        rotated_image = pygame.transform.rotate(self.image, angle)
-        rotated_rect = rotated_image.get_rect(center=self.rect.center)
-
-        # Adjust midtop position based on rotation
-        rotated_midtop = rotated_rect.midtop
-        offset = Vector2(self.rect.midtop) - Vector2(rotated_midtop)
-        rotated_rect.midtop += offset
-
-        # Blit the rotated image using the new midtop position
-        screen.blit(rotated_image, rotated_rect.center)
-
-=======
         self._x = x
         self._y = y
         self._w = w
@@ -59,24 +32,12 @@ class AActor(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self._x,self._y))
         # Blit the rotated image using the new center position
         self.screen.blit(rotated_image, self.rect.center)
->>>>>>> DimaBranch
 
     def getActorLocation(self)->Vector2:
         return Vector2(self._x,self._y)
     def setActorLocation(self,Location:Vector2):
-<<<<<<< HEAD
-        self.rect.center = Location
-    def getActorRotation(self)->Vector2:
-        return self.FRotator
-    def setActorRotation(self, FRotator: Vector2):
-        self.FRotator = FRotator
-    def FindLookAtRotation(self,Start:Vector2,End:Vector2)->Vector2:
-        direction_vector = End - Start
-        return direction_vector.normalize()
-=======
         self._x = Location[0]
         self._y = Location[1]
->>>>>>> DimaBranch
 
 
 """
