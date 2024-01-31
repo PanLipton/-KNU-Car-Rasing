@@ -8,12 +8,16 @@ from pygame.math import Vector2
 
 sys.path.append("../Actor/")
 sys.path.append("../Collision/")
+sys.path.append("../SoundManager/")
 
 from Collision import *
 from Actor import *
+from SoundManager import *
 
 class APlayer(AActor):
     BoxCollision=None
+    SoundManager=None
+    SoundManager1=None
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
         script_directory = os.path.dirname(os.path.abspath("../"))
@@ -24,40 +28,60 @@ class APlayer(AActor):
         super().__init__(self.screen,self.image,x,y,w,h)
         #Create Box Collision
         self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
+        self.SoundManager = SoundManager()
+        self.
+        self.SoundManager1 = SoundManager()
+
     #Drawing 
     def draw(self):
         super().draw()
+        self.SoundManager1.playSoundCar()
         #Draw Collision
         #Uncoment if you want 
         self.BoxCollision.draw()
+        
     #Moving Up
-    def MoveUP(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveUP(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
         cur_Location[1]-=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            return False
+        self.SoundManager.playSoundCrash()
+        return True
     #Moving Down
-    def MoveDown(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
         cur_Location[1]+=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            return False
+        self.SoundManager.playSoundCrash()
+        return True
+            
     #Moving Right
-    def MoveRight(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveRight(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
         cur_Location[0]+=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            return False
+        return True
+            
     #Moving Left
-    def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
         cur_Location[0]-=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self.BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            return False
+        return True
+    def getCollision(self):
+        return self.BoxCollision
     #Intersects with BoxCollision
     def Intersects(self,Location:Vector2,obstacles:pygame.sprite.Group()):
         temp_Collision = UBoxCollision(self.screen,Location[0],Location[1],self._w,self._h,'Orange')
@@ -102,13 +126,13 @@ while True:
             exit()
         keys = pygame.key.get_pressed()
         if keys[K_LEFT]:
-            player.MoveLeft(10,all_sprites)
+            print(player.MoveLeft(10,all_sprites))
         if keys[K_RIGHT]:
-            player.MoveRight(10,all_sprites)
+            print(player.MoveRight(10,all_sprites))
         if keys[K_DOWN]:
-            player.MoveDown(10,all_sprites)
+            print(player.MoveDown(10,all_sprites))
         if keys[K_UP]:
-            player.MoveUP(10,all_sprites)
+            print(player.MoveUP(10,all_sprites))
     
     screen.fill([255, 255, 255])
     player.draw()
