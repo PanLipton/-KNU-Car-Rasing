@@ -17,7 +17,6 @@ from SoundManager import *
 class APlayer(AActor):
     BoxCollision=None
     SoundManager=None
-    SoundManager1=None
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
         script_directory = os.path.dirname(os.path.abspath("../"))
@@ -29,13 +28,11 @@ class APlayer(AActor):
         #Create Box Collision
         self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
         self.SoundManager = SoundManager()
-        self.
-        self.SoundManager1 = SoundManager()
 
     #Drawing 
     def draw(self):
         super().draw()
-        self.SoundManager1.playSoundCar()
+        #self.SoundManager.playSoundCar()
         #Draw Collision
         #Uncoment if you want 
         self.BoxCollision.draw()
@@ -90,10 +87,20 @@ class APlayer(AActor):
                 if(temp_Collision.itteract(sprite.getCollision())):
                     return True
         return False
+    def handle_events(self,obstacles:pygame.sprite.Group()):
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT]:
+            print(player.MoveLeft(10,obstacles))
+        if keys[K_RIGHT]:
+            print(player.MoveRight(10,obstacles))
+        if keys[K_DOWN]:
+            print(player.MoveDown(10,obstacles))
+        if keys[K_UP]:
+            print(player.MoveUP(10,obstacles))
+        
 
             
         
-
 """
 #test APlayer game loop
 
@@ -124,15 +131,7 @@ while True:
             #quit game
             pygame.quit()
             exit()
-        keys = pygame.key.get_pressed()
-        if keys[K_LEFT]:
-            print(player.MoveLeft(10,all_sprites))
-        if keys[K_RIGHT]:
-            print(player.MoveRight(10,all_sprites))
-        if keys[K_DOWN]:
-            print(player.MoveDown(10,all_sprites))
-        if keys[K_UP]:
-            print(player.MoveUP(10,all_sprites))
+        player.handle_events(all_sprites)
     
     screen.fill([255, 255, 255])
     player.draw()
@@ -142,4 +141,3 @@ while True:
     pygame.display.update()
     clock.tick(60)
 """
-
