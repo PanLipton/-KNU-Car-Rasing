@@ -5,6 +5,8 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
+#pyganim module
+#import pyganim
 
 sys.path.append("../Actor/")
 sys.path.append("../Collision/")
@@ -18,6 +20,8 @@ class APlayer(AActor):
     #private
     _BoxCollision=None
     _SoundManager=None
+    explosion_animation = None
+    
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
         script_directory = os.path.dirname(os.path.abspath("../"))
@@ -29,12 +33,41 @@ class APlayer(AActor):
         #Create Box Collision
         self._BoxCollision = UBoxCollision(self._screen,x,y,w,h,'Orange')
         self._SoundManager = SoundManager()
+        # Load explosion frames/images
+        #self._load_explosion_frames(4096,4096,"explosion.png")
 
+    """
+    def _load_explosion_frames(self,width:int,height:int,exp_image):
+        # Load explosion frames from a single image (sprite sheet)
+        #script_directory = os.path.dirname(os.path.abspath("../"))
+        #explosion_sheet_path = os.path.join("assets/animations/explosion", exp_image)
+        # Extract explosion frames using Pyganim
+        # create the animation objects
+        # Load the image containing the animation frames
+        
+       # Load explosion frames from a single image (sprite sheet)
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        explosion_sheet_image = os.path.join(script_directory, exp_image)
+
+        # Initialize Pyganim
+        explosion_frames = pyganim.getImagesFromSpriteSheet(explosion_sheet_image, rows=1, cols=8)
+       # Create animation frames
+        frames = []
+        for image in explosion_frames:
+            frames.append((image, 100))  # Adjust the duration as needed
+        
+        # Create the explosion animation object
+        self.explosion_animation = pyganim.PygAnimation(frames)
+        self.explosion_animation.play()
+                
+    def play_explosion_animation(self):
+        self.explosion_animation.blit(screen, (100, 50))
+    """
     #Drawing 
     def draw(self):
         super().draw()
         #TODO: Play Sound of engine
-        #self.SoundManager.playSoundCar()
+        #self._SoundManager.playSoundCar()
         #Draw Collision
         #Uncoment if you want 
         #self.BoxCollision.draw()
@@ -48,6 +81,7 @@ class APlayer(AActor):
             super().setActorLocation(cur_Location)
             return False
         self._SoundManager.playSoundCrash()
+        #self.play_explosion_animation()
         return True
     #Moving Down
     def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
@@ -58,6 +92,7 @@ class APlayer(AActor):
             super().setActorLocation(cur_Location)
             return False
         self._SoundManager.playSoundCrash()
+        #self.play_explosion_animation()
         return True
             
     #Moving Right
@@ -97,6 +132,7 @@ class APlayer(AActor):
             return player.MoveDown(distance,obstacles)
         if keys[K_UP]:
             return player.MoveUP(distance,obstacles)
+    
         
 
             
@@ -132,7 +168,6 @@ while True:
             pygame.quit()
             exit()
         print(player.handle_events(10,all_sprites))
-    
     screen.fill([255, 255, 255])
     player.draw()
     player1.draw()
