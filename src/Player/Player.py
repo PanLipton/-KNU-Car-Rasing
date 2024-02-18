@@ -7,9 +7,11 @@ import math  # Import the math module
 from pygame.math import Vector2
 #pyganim module
 #import pyganim
+
 sys.path.append('../Actor/')
 sys.path.append('../Collision/')
 sys.path.append('../SoundManager/')
+
 
 from Collision import *
 from Actor import *
@@ -19,7 +21,9 @@ class APlayer(AActor):
     #private
     _BoxCollision=None
     _SoundManager=None
+
     _explosion_animation = None
+
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
@@ -33,6 +37,7 @@ class APlayer(AActor):
         self._BoxCollision = UBoxCollision(self._screen,x,y,w,h,'Orange')
         self._SoundManager = SoundManager()
         # Load explosion frames/images
+
         self._load_explosion_frames("explosion.png",512,512)
 
 
@@ -85,10 +90,12 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+
             self._SoundManager.playSoundVroom()
             return False
         self._SoundManager.playSoundCrash()
         self._play_explosion_animation(self._x,self._y)
+
         return True
     #Moving Down
     def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
@@ -99,7 +106,9 @@ class APlayer(AActor):
             super().setActorLocation(cur_Location)
             return False
         self._SoundManager.playSoundCrash()
+
         self._play_explosion_animation(self._x,self._y)
+
         return True
             
     #Moving Right
@@ -143,8 +152,8 @@ class APlayer(AActor):
         
 
             
-""" 
 
+""" 
 #test APlayer game loop
 
 #init game
@@ -182,5 +191,5 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-
 """
+
