@@ -1,7 +1,7 @@
 # MainMenu.py
 import pygame
 import sys
-from menus.BaseMenu import BaseMenu
+from Menu.BaseMenu import BaseMenu
 
 class MainMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
@@ -15,7 +15,7 @@ class MainMenu(BaseMenu):
         print("Play button pressed")
 
     def settings(self):
-        from menus.SettingsMenu import SettingsMenu
+        from Menu.SettingsMenu import SettingsMenu
         self.menu_manager.change_menu(SettingsMenu)
 
 

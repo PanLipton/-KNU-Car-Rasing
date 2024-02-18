@@ -2,7 +2,7 @@
 
 import pygame
 import pygame_gui
-from menus.BaseMenu import BaseMenu
+from Menu.BaseMenu import BaseMenu
 
 class SettingsMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
@@ -33,7 +33,7 @@ class SettingsMenu(BaseMenu):
         self.add_button('Back', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2), self.back_action, 'no_border_button')
 
     def back_action(self):
-        from menus.MainMenu import MainMenu
+        from Menu.MainMenu import MainMenu
         self.menu_manager.change_menu(MainMenu)
 
     def draw(self):

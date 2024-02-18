@@ -1,6 +1,6 @@
 import pygame
 import pygame_gui
-from menus.MainMenu import MainMenu
+from Menu.MainMenu import MainMenu
 from MenuManager import MenuManager
 from config import BACKGROUND_IMAGE_PATH 
 
