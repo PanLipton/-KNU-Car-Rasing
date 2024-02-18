@@ -21,7 +21,7 @@ class APlayer(AActor):
     #private
     _BoxCollision=None
     _SoundManager=None
-
+    _score = None
     _explosion_animation = None
 
     
@@ -37,7 +37,7 @@ class APlayer(AActor):
         self._BoxCollision = UBoxCollision(self._screen,x,y,w,h,'Orange')
         self._SoundManager = SoundManager()
         # Load explosion frames/images
-
+        self._score = 0
         self._load_explosion_frames("explosion.png",512,512)
 
 
@@ -73,7 +73,12 @@ class APlayer(AActor):
                 pygame.time.wait(50)  # Adjust the delay between frames as needed
 
 
-
+    def _change_score(self,decimal:int):
+        self._score +=decimal
+        if(self._score < 0):
+            self._score = 0
+    def get_score(self)->int:
+        return self._score;
     #Drawing 
     def draw(self):
         super().draw()
@@ -90,7 +95,6 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-
             self._SoundManager.playSoundVroom()
             return False
         self._SoundManager.playSoundCrash()
@@ -104,9 +108,9 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundStop()
             return False
         self._SoundManager.playSoundCrash()
-
         self._play_explosion_animation(self._x,self._y)
 
         return True
@@ -118,6 +122,9 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundLineChange()
+        self._change_score(-3)
+        print(self._score)
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group()):
@@ -126,6 +133,9 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundLineChange()
+        self._change_score(-3)
+        print(self._score)
     #BoxCollision getter
     def getCollision(self):
         return self._BoxCollision
@@ -151,9 +161,8 @@ class APlayer(AActor):
     
         
 
-            
 
-""" 
+"""
 #test APlayer game loop
 
 #init game
