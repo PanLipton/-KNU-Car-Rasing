@@ -20,6 +20,8 @@ class SoundManager:
         self.sound_crash = Sound('../../assets/music/soundCollision.mp3')
         self.sound_car = Sound('../../assets/music/musicCarSound.mp3')
         self.sound_vroom = Sound('../../assets/music/musicCarVroom.mp3')
+        self.sound_line_change = Sound('../../assets/music/soundLineChange.mp3')
+        self.sound_stop = Sound('../../assets/music/soundStopCar.mp3')
 
     def playMusicMenu(self):
         self.stop_all()
@@ -40,6 +42,12 @@ class SoundManager:
 
     def playSoundVroom(self):
         self.sound_vroom.play()
+
+    def playSoundStop(self):
+        self.sound_stop.play()
+
+    def playSoundLineChange(self):
+        self.sound_line_change.play()
 
     def setMusicMenuVolume(self, volume):
         self.music_menu.set_volume(volume)
