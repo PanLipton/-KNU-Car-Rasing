@@ -1,3 +1,5 @@
+# SettingsMenu.py
+
 import pygame
 import pygame_gui
 from menus.BaseMenu import BaseMenu
@@ -6,7 +8,6 @@ class SettingsMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
         super().__init__(screen, gui_manager, menu_manager, background_image_path)
         self.create_ui_elements()
-
 
     def create_ui_elements(self):
         # Створення мітки "Volume"
@@ -28,18 +29,10 @@ class SettingsMenu(BaseMenu):
             object_id='no_border_slider'
         )
 
-        # Створення кнопки "Back"
-        self.back_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((self.screen.get_width() // 2 - 100, self.screen.get_height() // 2), (200, 30)),
-            text='Back',
-            manager=self.gui_manager,
-            container=self.gui_manager.get_root_container(),
-            object_id='no_border_button'
-        )
-        self.buttons.append((self.back_button, self.back_action))
+        # Створення кнопки "Back" за допомогою методу add_button
+        self.add_button('Back', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2), self.back_action, 'no_border_button')
 
     def back_action(self):
-        # Локальний імпорт MainMenu для уникнення циклічного імпорту
         from menus.MainMenu import MainMenu
         self.menu_manager.change_menu(MainMenu)
 
@@ -47,9 +40,8 @@ class SettingsMenu(BaseMenu):
         super().draw()
         self.gui_manager.draw_ui(self.screen)
 
-
     def handle_event(self, event):
-        super().handle_event(event)  # Обробка подій для кнопок
+        super().handle_event(event)
         if event.type == pygame.USEREVENT and event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             if event.ui_element == self.volume_slider:
-                print(f"Volume set to {event.value}")  # Обробка зміни гучності
+                print(f"Volume set to {event.value}")
