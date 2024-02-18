@@ -2,3 +2,4 @@
 src/Actor/__pycache__/*
 src/Collision/__pycache__/*
 src/SoundManager/__pycache__/*
+src/Menu/__pycache__/*
