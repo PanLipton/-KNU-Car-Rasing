@@ -6,7 +6,8 @@ from Menu.BaseMenu import BaseMenu
 
 class SettingsMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
-        super().__init__(screen, gui_manager, menu_manager, background_image_path)
+        title_font = pygame.font.Font('../assets/fonts/pixel_font.ttf', 100)  # Задаємо шрифт для заголовку
+        super().__init__(screen, gui_manager, menu_manager, background_image_path, "Car Racing", title_font)
         self.create_ui_elements()
 
     def create_ui_elements(self):
