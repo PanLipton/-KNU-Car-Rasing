@@ -11,7 +11,11 @@ class GameController:
         pygame.display.set_caption('Car Racing')
         self.gui_manager = pygame_gui.UIManager((1366, 900), 'theme.json')
         self.menu_manager = MenuManager(self.screen, self.gui_manager, BACKGROUND_IMAGE_PATH)  # Передача шляху до зображення
+<<<<<<< HEAD
         self.menu_manager.set_menu(MainMenu)  # Видалено зайвий аргумент                
+=======
+        self.menu_manager.set_menu(MainMenu)  # Видалено зайвий аргумент
+>>>>>>> main
 
     def run(self):
         clock = pygame.time.Clock()
@@ -33,5 +37,8 @@ class GameController:
             self.gui_manager.update(time_delta)
             pygame.display.flip()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
         pygame.quit()
