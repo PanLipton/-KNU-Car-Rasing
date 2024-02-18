@@ -6,6 +6,7 @@ class MenuManager:
         self.gui_manager = gui_manager
         self.background_image_path = background_image_path
         self.current_menu = None
+        self.num_players = 1
 
     def set_menu(self, menu_class):
         self.current_menu = menu_class(self.screen, self.gui_manager, self, self.background_image_path)  # Використання збереженого шляху
@@ -21,3 +22,6 @@ class MenuManager:
     def handle_event(self, event):
         if self.current_menu:
             self.current_menu.handle_event(event)
+    def set_num_players(self, num):
+        self.num_players = num
+        print(f"Вибрано {num} гравців")

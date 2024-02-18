@@ -12,7 +12,8 @@ class MainMenu(BaseMenu):
         self.add_button('Exit', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 + 40), self.exit, 'no_border_button')
 
     def play(self):
-        print("Play button pressed")
+        from Menu.PlayerSelectionMenu import PlayerSelectionMenu
+        self.menu_manager.change_menu(PlayerSelectionMenu)
 
     def settings(self):
         from Menu.SettingsMenu import SettingsMenu
