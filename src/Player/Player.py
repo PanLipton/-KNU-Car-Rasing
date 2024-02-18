@@ -8,9 +8,10 @@ from pygame.math import Vector2
 #pyganim module
 #import pyganim
 
-sys.path.append("../Actor/")
-sys.path.append("../Collision/")
-sys.path.append("../SoundManager/")
+sys.path.append('../Actor/')
+sys.path.append('../Collision/')
+sys.path.append('../SoundManager/')
+
 
 from Collision import *
 from Actor import *
@@ -20,7 +21,9 @@ class APlayer(AActor):
     #private
     _BoxCollision=None
     _SoundManager=None
-    explosion_animation = None
+    _score = None
+    _explosion_animation = None
+
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
@@ -34,35 +37,48 @@ class APlayer(AActor):
         self._BoxCollision = UBoxCollision(self._screen,x,y,w,h,'Orange')
         self._SoundManager = SoundManager()
         # Load explosion frames/images
-        #self._load_explosion_frames(4096,4096,"explosion.png")
+        self._score = 0
+        self._load_explosion_frames("explosion.png",512,512)
 
-    """
-    def _load_explosion_frames(self,width:int,height:int,exp_image):
-        # Load explosion frames from a single image (sprite sheet)
-        #script_directory = os.path.dirname(os.path.abspath("../"))
-        #explosion_sheet_path = os.path.join("assets/animations/explosion", exp_image)
-        # Extract explosion frames using Pyganim
-        # create the animation objects
-        # Load the image containing the animation frames
-        
-       # Load explosion frames from a single image (sprite sheet)
-        script_directory = os.path.dirname(os.path.abspath(__file__))
-        explosion_sheet_image = os.path.join(script_directory, exp_image)
 
-        # Initialize Pyganim
-        explosion_frames = pyganim.getImagesFromSpriteSheet(explosion_sheet_image, rows=1, cols=8)
-       # Create animation frames
-        frames = []
-        for image in explosion_frames:
-            frames.append((image, 100))  # Adjust the duration as needed
-        
-        # Create the explosion animation object
-        self.explosion_animation = pyganim.PygAnimation(frames)
-        self.explosion_animation.play()
-                
-    def play_explosion_animation(self):
-        self.explosion_animation.blit(screen, (100, 50))
-    """
+    #Load explosion animations
+    def _load_explosion_frames(self, exp_image, frame_width, frame_height):
+        self._explosion_animation = []  # Initialize the list to store explosion frames
+        script_directory = os.path.dirname(os.path.abspath("../"))  # Get the directory of the current script
+        player_image_path = os.path.join("assets/animations/explosion",exp_image)
+        exp_image_path = os.path.join(script_directory, player_image_path)  # Construct the path to the explosion image
+        print("Explosion image path:", exp_image_path)
+        explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()  # L
+        sheet_width, sheet_height = explosion_sheet.get_size()
+        rows = sheet_height // frame_height
+        cols = sheet_width // frame_width
+        for y in range(rows):
+            for x in range(cols):
+                frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
+                self._explosion_animation.append(frame)
+
+
+
+    #Play explosion animations
+    def _play_explosion_animation(self, player_x, player_y):
+        if self._explosion_animation:
+            for frame in self._explosion_animation:
+                frame_rect = frame.get_rect()
+                frame_rect.center = (player_x, player_y)
+                frame_x = frame_rect.topleft[0]+ self._w/2
+                frame_y = frame_rect.topleft[1]+ self._h/2
+                # Set the frame's center to match player's position
+                self._screen.blit(frame, (frame_x,frame_y))  # Blit the frame at the adjusted position
+                pygame.display.flip()  # Update the display after blitting each frame
+                pygame.time.wait(50)  # Adjust the delay between frames as needed
+
+
+    def _change_score(self,decimal:int):
+        self._score +=decimal
+        if(self._score < 0):
+            self._score = 0
+    def get_score(self)->int:
+        return self._score;
     #Drawing 
     def draw(self):
         super().draw()
@@ -79,9 +95,11 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundVroom()
             return False
         self._SoundManager.playSoundCrash()
-        #self.play_explosion_animation()
+        self._play_explosion_animation(self._x,self._y)
+
         return True
     #Moving Down
     def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
@@ -90,9 +108,11 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundStop()
             return False
         self._SoundManager.playSoundCrash()
-        #self.play_explosion_animation()
+        self._play_explosion_animation(self._x,self._y)
+
         return True
             
     #Moving Right
@@ -102,6 +122,9 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundLineChange()
+        self._change_score(-3)
+        print(self._score)
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group()):
@@ -110,6 +133,9 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundLineChange()
+        self._change_score(-3)
+        print(self._score)
     #BoxCollision getter
     def getCollision(self):
         return self._BoxCollision
@@ -135,8 +161,7 @@ class APlayer(AActor):
     
         
 
-            
-        
+
 """
 #test APlayer game loop
 
@@ -176,3 +201,4 @@ while True:
     pygame.display.update()
     clock.tick(60)
 """
+

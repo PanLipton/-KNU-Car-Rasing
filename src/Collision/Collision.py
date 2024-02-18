@@ -14,9 +14,9 @@ class UBoxCollision(pygame.Rect):
     x=0
     y=0
     #Window
-    screen=None;
+    screen=None
     #Color
-    color=None;
+    color=None
     #Constructor
     def __init__(self,screen,x,y,w,h,color):
         super().__init__(x, y, w, h)
