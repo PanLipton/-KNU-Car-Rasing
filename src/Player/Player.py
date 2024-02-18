@@ -38,30 +38,11 @@ class APlayer(AActor):
 
     """
     def _load_explosion_frames(self,width:int,height:int,exp_image):
-        # Load explosion frames from a single image (sprite sheet)
-        #script_directory = os.path.dirname(os.path.abspath("../"))
-        #explosion_sheet_path = os.path.join("assets/animations/explosion", exp_image)
-        # Extract explosion frames using Pyganim
-        # create the animation objects
-        # Load the image containing the animation frames
-        
-       # Load explosion frames from a single image (sprite sheet)
-        script_directory = os.path.dirname(os.path.abspath(__file__))
-        explosion_sheet_image = os.path.join(script_directory, exp_image)
-
-        # Initialize Pyganim
-        explosion_frames = pyganim.getImagesFromSpriteSheet(explosion_sheet_image, rows=1, cols=8)
-       # Create animation frames
-        frames = []
-        for image in explosion_frames:
-            frames.append((image, 100))  # Adjust the duration as needed
-        
-        # Create the explosion animation object
-        self.explosion_animation = pyganim.PygAnimation(frames)
-        self.explosion_animation.play()
-                
+        self.explosion_animation = pyganim.PygAnimation(frames)    
     def play_explosion_animation(self):
         self.explosion_animation.blit(screen, (100, 50))
+    def play_anim(self):
+        self.explosion_animation.play()
     """
     #Drawing 
     def draw(self):
@@ -79,6 +60,7 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
+            self._SoundManager.playSoundVroom()
             return False
         self._SoundManager.playSoundCrash()
         #self.play_explosion_animation()
