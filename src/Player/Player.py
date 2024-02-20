@@ -23,9 +23,13 @@ class APlayer(AActor):
     _SoundManager=None
     _score = None
     _explosion_animation = None
-
+    _key_UP = None
+    _key_DOWN = None
+    _key_LEFT = None
+    _key_RIGHT = None
     
-    def __init__(self,screen,image,x,y,w,h):
+    
+    def __init__(self,screen,UP:pygame.locals,DOWN:pygame.locals,RIGHT:pygame.locals,LEFT:pygame.locals,image,x,y,w,h):
         #Load Image
         script_directory = os.path.dirname(os.path.abspath("../"))
         player_image_path = os.path.join("assets/cars",image)
@@ -39,6 +43,10 @@ class APlayer(AActor):
         # Load explosion frames/images
         self._score = 0
         self._load_explosion_frames("explosion.png",512,512)
+        self._key_UP = UP
+        self._key_DOWN = DOWN
+        self._key_LEFT = LEFT
+        self._key_RIGHT = RIGHT
 
 
     #Load explosion animations
@@ -143,17 +151,16 @@ class APlayer(AActor):
     #handle Player keys reaction returns true if Player intersects from front and back 
     def handle_events(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         keys = pygame.key.get_pressed()
-        if keys[K_LEFT]:
+        if keys[self._key_LEFT]:
             player.MoveLeft(distance,obstacles)
-        if keys[K_RIGHT]:
+        if keys[self._key_RIGHT]:
             player.MoveRight(distance,obstacles)
-        if keys[K_DOWN]:
+        if keys[self._key_DOWN]:
             return player.MoveDown(distance,obstacles)
-        if keys[K_UP]:
+        if keys[self._key_UP]:
             return player.MoveUP(distance,obstacles)
     
         
-
 
 """
 #test APlayer game loop
@@ -166,9 +173,9 @@ screen = pygame.display.set_mode((1000,1000))
 
 all_sprites = pygame.sprite.Group()
 
-player = APlayer(screen,"pink-car.png",150,50,50,100)
-player1 = APlayer(screen,"pink-car.png",250,100,50,100)
-player2 = APlayer(screen,"pink-car.png",350,150,50,100)
+player = APlayer(screen,K_UP,K_DOWN,K_RIGHT,K_LEFT,"pink-car.png",150,50,50,100)
+player1 = APlayer(screen,K_w,K_s,K_d,K_a,"pink-car.png",250,100,50,100)
+player2 = APlayer(screen,K_i,K_k,K_l,K_j,"pink-car.png",350,150,50,100)
 
 all_sprites.add(player,player1,player2)
 clock = pygame.time.Clock()
@@ -185,7 +192,9 @@ while True:
             #quit game
             pygame.quit()
             exit()
-        print(player.handle_events(10,all_sprites))
+        player.handle_events(10,all_sprites)
+        player1.handle_events(10,all_sprites)
+        player2.handle_events(10,all_sprites)
     screen.fill([255, 255, 255])
     player.draw()
     player1.draw()
@@ -193,5 +202,4 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-
-""" 
+"""
