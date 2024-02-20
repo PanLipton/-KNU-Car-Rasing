@@ -5,8 +5,6 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
-#pyganim module
-#import pyganim
 
 sys.path.append('../Actor/')
 sys.path.append('../Collision/')
@@ -23,13 +21,9 @@ class APlayer(AActor):
     _SoundManager=None
     _score = None
     _explosion_animation = None
-    _key_UP = None
-    _key_DOWN = None
-    _key_LEFT = None
-    _key_RIGHT = None
     
     
-    def __init__(self,screen,UP:pygame.locals,DOWN:pygame.locals,RIGHT:pygame.locals,LEFT:pygame.locals,image,x,y,w,h):
+    def __init__(self,screen,image,x,y,w,h):
         #Load Image
         script_directory = os.path.dirname(os.path.abspath("../"))
         player_image_path = os.path.join("assets/cars",image)
@@ -43,10 +37,6 @@ class APlayer(AActor):
         # Load explosion frames/images
         self._score = 0
         self._load_explosion_frames("explosion.png",512,512)
-        self._key_UP = UP
-        self._key_DOWN = DOWN
-        self._key_LEFT = LEFT
-        self._key_RIGHT = RIGHT
 
 
     #Load explosion animations
@@ -148,17 +138,6 @@ class APlayer(AActor):
                 if(temp_Collision.itteract(sprite.getCollision())):
                     return True
         return False
-    #handle Player keys reaction returns true if Player intersects from front and back 
-    def handle_events(self,distance:int,obstacles:pygame.sprite.Group())->bool:
-        keys = pygame.key.get_pressed()
-        if keys[self._key_LEFT]:
-            player.MoveLeft(distance,obstacles)
-        if keys[self._key_RIGHT]:
-            player.MoveRight(distance,obstacles)
-        if keys[self._key_DOWN]:
-            return player.MoveDown(distance,obstacles)
-        if keys[self._key_UP]:
-            return player.MoveUP(distance,obstacles)
     
         
 
