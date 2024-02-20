@@ -27,9 +27,13 @@ class APlayer(AActor):
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
-        script_directory = os.path.dirname(os.path.abspath("../"))
-        player_image_path = os.path.join("assets/cars",image)
-        self._image = pygame.image.load(os.path.join(script_directory, player_image_path))
+        try:
+            self._image = pygame.image.load(image).convert_alpha()
+        except FileNotFoundError:
+            print(f"Error: File not found - {image}")
+            sys.exit(1)
+
+        self._image = pygame.transform.scale(self._image, (w, h))
         self._screen = screen
         #Call AActor Constructor
         super().__init__(self._screen,self._image,x,y,w,h)
@@ -38,25 +42,26 @@ class APlayer(AActor):
         self._SoundManager = SoundManager()
         # Load explosion frames/images
         self._score = 0
-        self._load_explosion_frames("explosion.png",512,512)
+        self._load_explosion_frames("explosion.png", 512, 512)
 
 
     #Load explosion animations
     def _load_explosion_frames(self, exp_image, frame_width, frame_height):
         self._explosion_animation = []  # Initialize the list to store explosion frames
-        script_directory = os.path.dirname(os.path.abspath("../"))  # Get the directory of the current script
-        player_image_path = os.path.join("assets/animations/explosion",exp_image)
-        exp_image_path = os.path.join(script_directory, player_image_path)  # Construct the path to the explosion image
-        print("Explosion image path:", exp_image_path)
-        explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()  # L
-        sheet_width, sheet_height = explosion_sheet.get_size()
-        rows = sheet_height // frame_height
-        cols = sheet_width // frame_width
-        for y in range(rows):
-            for x in range(cols):
-                frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
-                self._explosion_animation.append(frame)
-
+        # Прямий шлях до зображення вибуху
+        exp_image_path = os.path.join('..','assets', 'animations', 'explosion', exp_image)
+        try:
+            explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()
+            sheet_width, sheet_height = explosion_sheet.get_size()
+            rows = sheet_height // frame_height
+            cols = sheet_width // frame_width
+            for y in range(rows):
+                for x in range(cols):
+                    frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
+                    self._explosion_animation.append(frame)
+        except FileNotFoundError:
+            print(f"Error: File not found - {exp_image_path}")
+            sys.exit(1)
 
 
     #Play explosion animations

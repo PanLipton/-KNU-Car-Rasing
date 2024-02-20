@@ -14,14 +14,14 @@ class SoundManager:
         pygame.mixer.init()
 
         # Звуки для різних подій
-        self.music_menu = Sound('../../assets/music/musicMenu.mp3')
-        self.music_game = Sound('../../assets/music/musicGame.mp3')
-        self.sound_button = Sound('../../assets/music/soundButton.mp3')
-        self.sound_crash = Sound('../../assets/music/soundCollision.mp3')
-        self.sound_car = Sound('../../assets/music/musicCarSound.mp3')
-        self.sound_vroom = Sound('../../assets/music/musicCarVroom.mp3')
-        self.sound_line_change = Sound('../../assets/music/soundLineChange.mp3')
-        self.sound_stop = Sound('../../assets/music/soundStopCar.mp3')
+        self.music_menu = Sound('../assets/music/musicMenu.mp3')
+        self.music_game = Sound('../assets/music/musicGame.mp3')
+        self.sound_button = Sound('../assets/music/soundButton.mp3')
+        self.sound_crash = Sound('../assets/music/soundCollision.mp3')
+        self.sound_car = Sound('../assets/music/musicCarSound.mp3')
+        self.sound_vroom = Sound('../assets/music/musicCarVroom.mp3')
+        self.sound_line_change = Sound('../assets/music/soundLineChange.mp3')
+        self.sound_stop = Sound('../assets/music/soundStopCar.mp3')
 
     def playMusicMenu(self):
         self.stop_all()
