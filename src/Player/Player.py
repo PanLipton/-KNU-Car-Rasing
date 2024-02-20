@@ -9,11 +9,13 @@ from pygame.math import Vector2
 sys.path.append('../Actor/')
 sys.path.append('../Collision/')
 sys.path.append('../SoundManager/')
+#sys.path.append('../Bot/')
 
 
 from Collision import *
 from Actor import *
 from SoundManager import *
+#from Bot import *
 
 class APlayer(AActor):
     #private
@@ -131,16 +133,14 @@ class APlayer(AActor):
     def getCollision(self):
         return self._BoxCollision
     #Intersects with BoxCollision
-    def Intersects(self,Location:Vector2,obstacles:pygame.sprite.Group()):
+    def Intersects(self,Location:Vector2,obstacles):
         temp_Collision = UBoxCollision(self._screen,Location[0],Location[1],self._w,self._h,'Orange')
         for sprite in obstacles:
-            if(not sprite == self):
-                if(temp_Collision.itteract(sprite.getCollision())):
-                    return True
+            if(temp_Collision.itteract(sprite.getCollision())):
+                return True
         return False
     
         
-
 """
 #test APlayer game loop
 
@@ -152,11 +152,10 @@ screen = pygame.display.set_mode((1000,1000))
 
 all_sprites = pygame.sprite.Group()
 
-player = APlayer(screen,K_UP,K_DOWN,K_RIGHT,K_LEFT,"pink-car.png",150,50,50,100)
-player1 = APlayer(screen,K_w,K_s,K_d,K_a,"pink-car.png",250,100,50,100)
-player2 = APlayer(screen,K_i,K_k,K_l,K_j,"pink-car.png",350,150,50,100)
+player = APlayer(screen,"pink-car.png",150,50,50,100)
+bot = Bot(screen,"pink-car.png",250,100,50,100)
 
-all_sprites.add(player,player1,player2)
+all_sprites.add(player,bot)
 clock = pygame.time.Clock()
 #Title
 pygame.display.set_caption("Car Racing")
@@ -171,13 +170,18 @@ while True:
             #quit game
             pygame.quit()
             exit()
-        player.handle_events(10,all_sprites)
-        player1.handle_events(10,all_sprites)
-        player2.handle_events(10,all_sprites)
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT]:
+            player.MoveLeft(10, all_sprites)
+        if keys[K_RIGHT]:
+            player.MoveRight(10, all_sprites)
+        if keys[K_DOWN]:
+            player.MoveDown(10, all_sprites)
+        if keys[K_UP]:
+            player.MoveUP(10, all_sprites)
     screen.fill([255, 255, 255])
     player.draw()
-    player1.draw()
-    player2.draw()
+    bot.draw()
     #update screen
     pygame.display.update()
     clock.tick(60)

@@ -4,5 +4,6 @@ src/Collision/__pycache__/*
 src/SoundManager/__pycache__/*
 src/Menu/__pycache__/*
 src/Player/__pycache__/*
+src/Bot/__pycache__/*
 src/__pycache__/*
 
