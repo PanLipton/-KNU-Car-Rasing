@@ -82,8 +82,6 @@ class APlayer(AActor):
     #Drawing 
     def draw(self):
         super().draw()
-        #TODO: Play Sound of engine
-        #self._SoundManager.playSoundCar()
         #Draw Collision
         #Uncoment if you want 
         #self.BoxCollision.draw()
@@ -95,7 +93,6 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            self._SoundManager.playSoundVroom()
             return False
         self._SoundManager.playSoundCrash()
         self._play_explosion_animation(self._x,self._y)
@@ -108,7 +105,6 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            self._SoundManager.playSoundStop()
             return False
         self._SoundManager.playSoundCrash()
         self._play_explosion_animation(self._x,self._y)
@@ -122,7 +118,6 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            self._SoundManager.playSoundLineChange()
         self._change_score(-3)
         print(self._score)
             
@@ -133,9 +128,7 @@ class APlayer(AActor):
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            self._SoundManager.playSoundLineChange()
         self._change_score(-3)
-        print(self._score)
     #BoxCollision getter
     def getCollision(self):
         return self._BoxCollision
@@ -200,5 +193,5 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-"""
 
+""" 
