@@ -13,9 +13,9 @@ sys.path.append('../Collision/')
 sys.path.append('../SoundManager/')
 
 
-from Collision import *
-from Actor import *
-from SoundManager import *
+from Collision.Collision import *
+from Actor.Actor import *
+from SoundManager.SoundManager import *
 
 class APlayer(AActor):
     #private

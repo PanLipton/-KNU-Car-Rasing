@@ -17,11 +17,17 @@ class PlayerSelectionMenu(BaseMenu):
 
     def select_players(self, num_players):
         self.menu_manager.set_num_players(num_players)
+        self.start_game(num_players)  # Запуск гри з вибраною кількістю гравців
 
     def back_action(self):
         from Menu.MainMenu import MainMenu
         self.menu_manager.change_menu(MainMenu)
 
+    def start_game(self, num_players):
+        from GameScene import GameScene
+        self.game_scene = GameScene(self.screen, num_players)
+        self.game_scene.run()
+    
     def draw(self):
         super().draw()
         self.gui_manager.draw_ui(self.screen)

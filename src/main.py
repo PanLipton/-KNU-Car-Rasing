@@ -1,5 +1,5 @@
 # main.py
-
+import pygame
 from GameController import GameController
 
 def main():
@@ -8,3 +8,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    pygame.quit()
