@@ -9,23 +9,26 @@ from pygame.math import Vector2
 sys.path.append("../Actor/")
 sys.path.append("../Collision/")
 
-from Collision import *
-from Actor import *
+from Collision.Collision import *
+from Actor.Actor import *
 
 class Bot(AActor):
     BoxCollision=None
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
-        script_directory = os.path.dirname(os.path.abspath("../"))
-        player_image_path = os.path.join("assets/cars",image)
-        self.image = pygame.image.load(os.path.join(script_directory, player_image_path))
-        self.screen = screen
-        #Call AActor Constructor
-        super().__init__(self.screen,self.image,x,y,w,h)
-        #Create Box Collision
-        self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
-        #Drawing 
+        bot_image_path = os.path.join('..','assets', 'cars', image)
+        try:
+            self.image = pygame.image.load(bot_image_path).convert_alpha()
+            self.screen = screen
+            #Call AActor Constructor
+            super().__init__(self.screen,self.image,x,y,w,h)
+            #Create Box Collision
+            self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
+            #Drawing 
+        except FileNotFoundError:
+            print(f"Error: File not found - {bot_image_path}")
+            sys.exit(1)
     def draw(self):
         super().draw()
         #Draw Collision
@@ -39,7 +42,6 @@ class Bot(AActor):
         super().setActorLocation(cur_Location)
     def getCollision(self)->UBoxCollision:
         return self.BoxCollision
-
 """
 #test APlayer game loop
 
