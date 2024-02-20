@@ -44,15 +44,15 @@ class GameScene:
 
     def update(self):
         keys = pygame.key.get_pressed()
-
+        left_edge, right_edge = self.road1.get_edge_coordinates()
         # Якщо наразі немає перешкод, створіть порожній список
         obstacles = []
         # Керування для гравця 1
         if self.num_players >= 1:
             if keys[pygame.K_w]: self.players[0].MoveUP(0.7, obstacles)
             if keys[pygame.K_s]: self.players[0].MoveDown(0.7, obstacles)
-            if keys[pygame.K_a]: self.players[0].MoveLeft(0.7, obstacles)
-            if keys[pygame.K_d]: self.players[0].MoveRight(0.7, obstacles)
+            if keys[pygame.K_a]: self.players[0].MoveLeft(0.7, obstacles, left_edge)
+            if keys[pygame.K_d]: self.players[0].MoveRight(0.7, obstacles, right_edge)
 
 
         roadspeed = 0.65

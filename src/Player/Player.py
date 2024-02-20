@@ -96,6 +96,8 @@ class APlayer(AActor):
     #Moving Up
     def MoveUP(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
+        if ((cur_Location[1]-distance))<0:
+            return
         cur_Location[1]-=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
@@ -109,6 +111,9 @@ class APlayer(AActor):
     #Moving Down
     def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
         cur_Location = super().getActorLocation()
+        if ((cur_Location[1]-distance))>810:
+            return
+        print(cur_Location[1])
         cur_Location[1]+=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
@@ -121,8 +126,10 @@ class APlayer(AActor):
         return True
             
     #Moving Right
-    def MoveRight(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveRight(self,distance:int,obstacles:pygame.sprite.Group(), right_edge):
         cur_Location = super().getActorLocation()
+        if right_edge<=((cur_Location[0]+distance+self._w)):
+            return
         cur_Location[0]+=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
@@ -132,8 +139,10 @@ class APlayer(AActor):
         print(self._score)
             
     #Moving Left
-    def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group()):
+    def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group(), left_edge):
         cur_Location = super().getActorLocation()
+        if ((cur_Location[0]+distance))<=left_edge:
+            return
         cur_Location[0]-=distance
         if(not self.Intersects(cur_Location,obstacles)):
             self._BoxCollision.setCoordinates(cur_Location)
