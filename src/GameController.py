@@ -3,7 +3,7 @@ import pygame_gui
 from Menu.MainMenu import MainMenu
 from MenuManager import MenuManager
 from config import BACKGROUND_IMAGE_PATH
-from src.SoundManager.SoundManager import sound_manager
+from SoundManager.SoundManager import sound_manager
 
 
 class GameController:

@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
 from Menu.BaseMenu import BaseMenu
-from src.SoundManager.SoundManager import sound_manager
+from SoundManager.SoundManager import sound_manager
 
 
 class SettingsMenu(BaseMenu):
