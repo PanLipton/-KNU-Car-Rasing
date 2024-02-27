@@ -1,0 +1,94 @@
+# GameScene.py
+
+import pygame
+from Road.Road import Road
+from Player.Player import APlayer
+import random
+from Bot.Bot import Bot
+
+class GameScene:
+    def __init__(self, screen, num_players):
+        self.screen = screen
+        self.num_players = num_players
+        self.players = []  # Список гравців
+        self.obstacles = pygame.sprite.Group()
+        self.spawn_timer = 0  # Ініціалізація таймера для спавну ботів
+        self.spawn_delay = 60  # Час спавну в кадрах (при 60 FPS, це буде 1 секунда)
+        self.init_game()
+
+    def init_game(self):
+        # Ініціалізація дороги
+        self.init_road()
+        self.init_players()
+
+
+    def init_road(self):
+        road_image_path = '../assets/img/road-6-lines.png'
+        self.road1 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road2 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road2.rect.y = -self.road2.rect.height  # Початкова позиція для другої дороги
+        
+
+    def init_players(self):
+        player_image_path = '../assets/cars/player-car-1.png'
+        player = APlayer(self.screen, player_image_path, 430, 500, 70, 120)
+        self.players.append(player)
+
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            self.update()  # Оновлення логіки гри
+            self.draw()  # Малювання сцени гри
+
+            pygame.display.flip()  # Оновлення вмісту вікна на екрані
+
+    def spawn_bot(self):
+        bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png"])
+        random_lines_cordinates = [289.3, 432.79, 584.7, 736.6, 889.9, 1034.1]
+        symbol = random.choice(['0',"1"])
+        start_x = random.randrange(1,5)+random.choice(random_lines_cordinates)
+        new_bot = Bot(self.screen, bot_model, start_x, -120, 70, 120)
+        self.obstacles.add(new_bot)
+        # new_bot.draw()
+
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        left_edge, right_edge = self.road1.get_edge_coordinates()
+        self.spawn_timer += 1
+        if self.spawn_timer >= self.spawn_delay:
+            self.spawn_bot()
+            self.spawn_timer = 0  # Скидання таймера       
+        # Керування для гравця 1
+        if self.num_players >= 1:
+            if keys[pygame.K_w]: self.players[0].MoveUP(0.7, self.obstacles)
+            if keys[pygame.K_s]: self.players[0].MoveDown(0.7, self.obstacles)
+            if keys[pygame.K_a]: self.players[0].MoveLeft(0.7, self.obstacles, left_edge)
+            if keys[pygame.K_d]: self.players[0].MoveRight(0.7, self.obstacles, right_edge)
+        
+        for bot in list(self.obstacles):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
+            bot.MoveDown(1)
+            if bot.getActorLocation()[1] > 820:  # Перевірка чи бот вийшов за межі екрану
+                self.obstacles.remove(bot)  # Видалення бота з групи перешкод
+
+        roadspeed = 0.65
+        self.road1.update(roadspeed)
+        self.road2.update(roadspeed)
+        # Переміщення дороги назад вгору, коли вона повністю з'являється на екрані
+        if self.road1.rect.top >= self.screen.get_height():
+            self.road1.rect.y = -self.screen.get_height()
+        if self.road2.rect.top >= self.screen.get_height():
+            self.road2.rect.y = -self.screen.get_height()
+
+    def draw(self):
+        # Малювання дороги
+        self.screen.blit(self.road1.image, self.road1.rect)
+        self.screen.blit(self.road2.image, self.road2.rect)
+        for bot in self.obstacles:
+            bot.draw()
+        for player in self.players:
+            player.draw()

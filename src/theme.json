@@ -1,0 +1,41 @@
+{
+
+    "no_border_button": {
+        "colours": {
+            "normal_bg": "#00000000",
+            "hovered_bg": "#00000000",
+            "disabled_bg": "#00000000",
+            "selected_bg": "#00000000",
+            "active_bg": "#00000000",
+            "normal_text": "#FFFFFFFF",
+            "hovered_text": "#FF0000FF",
+            "disabled_text": "#808080FF",
+            "selected_text": "#FFFFFFFF",
+            "active_text": "#FFFFFFFF"
+        },
+        "misc": {
+            "border_width": 0
+        }
+    },
+
+  "version": "1.0",
+  "theme": {
+    "button": {
+      "normal": {"text": {"font": "../fonts/pixel_font.ttf", "font_size": 36}},
+      "hovered": {"text": {"font": "../fonts/pixel_font.ttf", "font_size": 36}},
+      "active": {"text": {"font": "../fonts/pixel_font.ttf", "font_size": 36}},
+      "disabled": {"text": {"font": "../fonts/pixel_font.ttf", "font_size": 36}}
+    }
+  },
+  "themes": {
+    "custom_theme": {
+      "font": {
+        "default_path": "../../assets/fonts/pixel_font.ttf",
+        "size": 14,
+        "colour": [255, 255, 255],
+        "kerning": true
+      }
+    }
+  }
+}
+

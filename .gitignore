@@ -1,6 +1,12 @@
+.DS_Store
+src/Actor/__pycache__/*
+src/Collision/__pycache__/*
+src/Menu/__pycache__/*
+src/Road/__pycache__/*
+src/SoundManager/__pycache__/*
 <<<<<<< HEAD
-.DS_Store
-
 =======
-.DS_Store
+src/Player/__pycache__/*
 >>>>>>> main
+src/__pycache__/*
+
