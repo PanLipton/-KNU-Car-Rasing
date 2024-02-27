@@ -127,7 +127,6 @@ class APlayer(AActor):
     #Moving Right
     def MoveRight(self,distance:int,obstacles:pygame.sprite.Group(), right_edge):
         cur_Location = super().getActorLocation()
-        print(cur_Location[0])
         if right_edge<=((cur_Location[0]+distance+self._w)):
             return
         cur_Location[0]+=distance
@@ -135,13 +134,11 @@ class APlayer(AActor):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
             self._SoundManager.playSoundLineChange()
-        self._change_score(-3)
         # print(self._score)
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group(), left_edge):
         cur_Location = super().getActorLocation()
-        print(cur_Location[0])
         if ((cur_Location[0]+distance))<=left_edge:
             return
         cur_Location[0]-=distance
@@ -149,7 +146,6 @@ class APlayer(AActor):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
             self._SoundManager.playSoundLineChange()
-        self._change_score(-3)
         # print(self._score)
     #BoxCollision getter
     def getCollision(self):
