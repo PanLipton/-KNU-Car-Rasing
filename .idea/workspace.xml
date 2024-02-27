@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90dbbab-5e98-4ae3-9f3f-5d2d721bccbb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Menu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/MainMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Menu/SettingsMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/SettingsMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SoundManager/SoundManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/SoundManager/SoundManager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,18 +39,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GameController.executor": "Run",
-    "Python.Interface.executor": "Run",
-    "Python.SettingsMenu.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "CoolBranch",
-    "last_opened_file_path": "C:/Users/Tymur/Desktop/work/-KNU-Car-Rasing"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GameController.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Interface.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SettingsMenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;CoolBranch&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Tymur/Desktop/work/-KNU-Car-Rasing&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
