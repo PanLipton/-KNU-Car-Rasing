@@ -10,6 +10,7 @@ class MainMenu(BaseMenu):
         self.add_button('Play', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 40), self.play, 'no_border_button')
         self.add_button('Settings', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2), self.settings, 'no_border_button')
         self.add_button('Exit', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 + 40), self.exit, 'no_border_button')
+        self.play_background_music()
 
     def play(self):
         from Menu.PlayerSelectionMenu import PlayerSelectionMenu

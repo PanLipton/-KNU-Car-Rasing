@@ -1,6 +1,8 @@
 import pygame
+
+
 class Sound:
-    def __init__(self, file_path):
+    def init(self, file_path):
         self.sound = pygame.mixer.Sound(file_path)
 
     def play(self):
@@ -9,8 +11,20 @@ class Sound:
     def set_volume(self, volume):
         self.sound.set_volume(volume)
 
+
 class SoundManager:
-    def __init__(self):
+    _instance = None
+
+    def new(cls):
+        if cls._instance is None:
+            cls._instance = super().new(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
+    def init(self):
+        if self._initialized:
+            return
+        self._initialized = True
         pygame.mixer.init()
 
         # Звуки для різних подій
@@ -18,10 +32,8 @@ class SoundManager:
         self.music_game = Sound('../assets/music/musicGame.mp3')
         self.sound_button = Sound('../assets/music/soundButton.mp3')
         self.sound_crash = Sound('../assets/music/soundCollision.mp3')
-        self.sound_car = Sound('../assets/music/musicCarSound.mp3')
-        self.sound_vroom = Sound('../assets/music/musicCarVroom.mp3')
-        self.sound_line_change = Sound('../assets/music/soundLineChange.mp3')
-        self.sound_stop = Sound('../assets/music/soundStopCar.mp3')
+
+
 
     def playMusicMenu(self):
         self.stop_all()
@@ -36,21 +48,10 @@ class SoundManager:
 
     def playSoundCrash(self):
         self.sound_crash.play()
-
-    def playSoundCar(self):
-        self.sound_car.play()
-
-    def playSoundVroom(self):
-        self.sound_vroom.play()
-
-    def playSoundStop(self):
-        self.sound_stop.play()
-
-    def playSoundLineChange(self):
-        self.sound_line_change.play()
-
     def setMusicMenuVolume(self, volume):
         self.music_menu.set_volume(volume)
 
     def stop_all(self):
         pygame.mixer.stop()
+
+sound_manager = SoundManager()

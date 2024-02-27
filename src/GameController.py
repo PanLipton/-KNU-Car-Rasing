@@ -11,7 +11,8 @@ class GameController:
         pygame.display.set_caption('Car Racing')
         self.gui_manager = pygame_gui.UIManager((1366, 900), 'theme.json')
         self.menu_manager = MenuManager(self.screen, self.gui_manager, BACKGROUND_IMAGE_PATH)  # Передача шляху до зображення
-        self.menu_manager.set_menu(MainMenu)  # Видалено зайвий аргумент                
+        self.menu_manager.set_menu(MainMenu)  # Видалено зайвий аргумент
+
 
     def run(self):
         clock = pygame.time.Clock()

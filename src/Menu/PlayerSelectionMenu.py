@@ -8,6 +8,7 @@ class PlayerSelectionMenu(BaseMenu):
         title_font = pygame.font.Font('../assets/fonts/pixel_font.ttf', 100)
         super().__init__(screen, gui_manager, menu_manager, background_image_path, "Number of players", title_font)
         self.create_ui()
+        self.play_background_music()
 
     def create_ui(self):
         positions = [(self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 90 + i * 40) for i in range(4)]

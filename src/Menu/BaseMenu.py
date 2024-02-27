@@ -2,6 +2,7 @@
 
 import pygame
 import pygame_gui
+pygame.mixer.init()
 class BaseMenu:
     def __init__(self, screen, gui_manager, menu_manager, background_image_path, title_text="", title_font=None, title_color=(255, 255, 255)):
         self.screen = screen
@@ -12,6 +13,7 @@ class BaseMenu:
         self.title_font = title_font if title_font else pygame.font.Font(None, 36)  # Використовуємо заданий шрифт або стандартний
         self.title_color = title_color
         self.buttons = []
+        self.play_background_music()
         
     def add_button(self, text, position, action=None, object_id=None):
         button_style = object_id if object_id else 'default_button'
@@ -23,6 +25,14 @@ class BaseMenu:
             object_id=button_style
         )
         self.buttons.append((button, action))
+
+    def play_background_music(self):
+        pygame.mixer.music.load('../assets/music/musicMenu.mp3')
+        #pygame.mixer.music.set_volume(self.__volume)  # Начальная громкость
+        pygame.mixer.music.play(-1)
+
+    def set_volume(self, volume):
+        pygame.mixer.music.set_volume(volume)
 
     def handle_event(self, event):
         if event.type == pygame.USEREVENT:
