@@ -45,6 +45,8 @@ class UBoxCollision(pygame.Rect):
     def setCoordinates(self,NewCoordinates:Vector2):
         self.x = NewCoordinates[0]
         self.y = NewCoordinates[1]
+    def getCoordinates(self)->Vector2:
+        return Vector2(self.x,self.y)
     
     
 """    

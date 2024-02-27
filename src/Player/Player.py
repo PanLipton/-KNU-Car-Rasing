@@ -72,7 +72,7 @@ class APlayer(AActor):
                 pygame.display.flip()  # Update the display after blitting each frame
                 pygame.time.wait(50)  # Adjust the delay between frames as needed
 
-
+    
     def _change_score(self,decimal:int):
         self._score +=decimal
         if(self._score < 0):
@@ -87,60 +87,91 @@ class APlayer(AActor):
         #self.BoxCollision.draw()
         
     #Moving Up
-    def MoveUP(self,distance:int,obstacles:pygame.sprite.Group())->bool:
+    def MoveUP(self,distance:int,obstacles:pygame.sprite.Group()):
         cur_Location = super().getActorLocation()
         cur_Location[1]-=distance
-        if(not self.Intersects(cur_Location,obstacles)):
+        if(not (self._Intersects(cur_Location,obstacles) == 1)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            return False
-        self._SoundManager.playSoundCrash()
-        self._play_explosion_animation(self._x,self._y)
-
-        return True
     #Moving Down
-    def MoveDown(self,distance:int,obstacles:pygame.sprite.Group())->bool:
+    def MoveDown(self,distance:int,obstacles:pygame.sprite.Group()):
         cur_Location = super().getActorLocation()
         cur_Location[1]+=distance
-        if(not self.Intersects(cur_Location,obstacles)):
+        if(not (self._Intersects(cur_Location,obstacles) == -1)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-            return False
-        self._SoundManager.playSoundCrash()
-        self._play_explosion_animation(self._x,self._y)
-
-        return True
+        
             
     #Moving Right
     def MoveRight(self,distance:int,obstacles:pygame.sprite.Group()):
         cur_Location = super().getActorLocation()
         cur_Location[0]+=distance
-        if(not self.Intersects(cur_Location,obstacles)):
+        if(not (self._Intersects(cur_Location,obstacles) == -2)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-        self._change_score(-3)
-        print(self._score)
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group()):
         cur_Location = super().getActorLocation()
         cur_Location[0]-=distance
-        if(not self.Intersects(cur_Location,obstacles)):
+        if(not (self._Intersects(cur_Location,obstacles) == 2)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-        self._change_score(-3)
-    #BoxCollision getter
-    def getCollision(self):
-        return self._BoxCollision
-    #Intersects with BoxCollision
-    def Intersects(self,Location:Vector2,obstacles):
+    def _Intersects(self, Location:Vector2,obstacles)->int:
         temp_Collision = UBoxCollision(self._screen,Location[0],Location[1],self._w,self._h,'Orange')
-        for sprite in obstacles:
-            if(temp_Collision.itteract(sprite.getCollision())):
-                return True
-        return False
+        # Get the current position of the player
+        player_location = temp_Collision.getCoordinates()
+        # Create a rectangle representing the player's collision box
+        player_rect = pygame.Rect(player_location[0], player_location[1], self._w, self._h)
+
+        # Check for intersection with each obstacle
+        for obstacle in obstacles:
+            # Get the collision box of the obstacle
+            obstacle_collision = obstacle.getCollision()
+
+            # Create a rectangle representing the obstacle's collision box
+            obstacle_rect = pygame.Rect(obstacle_collision.x, obstacle_collision.y, obstacle_collision.w, obstacle_collision.h)
+
+            # Check for intersection between player's and obstacle's collision boxes
+            if player_rect.colliderect(obstacle_rect):
+                dx = self._x - obstacle_rect.x
+                dy = self._y - obstacle_rect.y
+                if abs(dx) > abs(dy):
+                    if dx > 0:
+                        #right
+                        return 2
+                    else:
+                        #left
+                        return -2
+                else:
+                    if dy > 0:
+                        #top
+                        return 1
+                    else:
+                        #bottom
+                        return -1
+        return 0  # No collision
     
+    def update(self,obstacles)->bool:
+        direction = self._Intersects(super().getActorLocation(),obstacles)
+        if(not direction ==0):
+            if(direction ==1):
+                self._SoundManager.playSoundCrash()
+                self._play_explosion_animation(self._x,self._y)
+                return True
+            elif(direction ==-1):
+                self._SoundManager.playSoundCrash()
+                self._play_explosion_animation(self._x,self._y)
+                return True
+            elif(direction ==2):
+                self._change_score(-3)
+                return False
+            elif(direction ==-2):
+                self._change_score(-3)
+                return False
+            
         
+
 """
 #test APlayer game loop
 
@@ -152,10 +183,11 @@ screen = pygame.display.set_mode((1000,1000))
 
 all_sprites = pygame.sprite.Group()
 
-player = APlayer(screen,"pink-car.png",150,50,50,100)
+player = APlayer(screen,"pink-car.png",300,500,50,100)
 bot = Bot(screen,"pink-car.png",250,100,50,100)
+bot1 = Bot(screen,"pink-car.png",400,100,50,100)
 
-all_sprites.add(player,bot)
+all_sprites.add(bot,bot1)
 clock = pygame.time.Clock()
 #Title
 pygame.display.set_caption("Car Racing")
@@ -179,10 +211,15 @@ while True:
             player.MoveDown(10, all_sprites)
         if keys[K_UP]:
             player.MoveUP(10, all_sprites)
+    player.update(all_sprites)
+    for bot in all_sprites:
+        bot.MoveDown(1)
     screen.fill([255, 255, 255])
     player.draw()
-    bot.draw()
+    for bot in all_sprites:
+        bot.draw()
     #update screen
     pygame.display.update()
     clock.tick(60)
+
 """
