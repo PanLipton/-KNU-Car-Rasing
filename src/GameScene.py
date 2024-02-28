@@ -18,8 +18,6 @@ class GameScene:
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
         self.difficulty_increase_interval = 30000  # Інтервал збільшення складності (30 секунд)
         self.last_difficulty_increase_time = pygame.time.get_ticks()  # Останнє збільшення складності
-        self.score_update_interval = 1000 # Очки нараховуються кожну секунду
-        self.last_score_update_time = pygame.time.get_ticks()
 
         self.init_game()
 
@@ -123,6 +121,10 @@ class GameScene:
             self.road1.rect.y = -self.screen.get_height()
         if self.road2.rect.top >= self.screen.get_height():
             self.road2.rect.y = -self.screen.get_height()
+        isGameEnded = False
+        for player in self.players:
+            isGameEnded = player.update(self.obstacles)
+        print(isGameEnded)
 
     def draw(self):
         # Малювання дороги

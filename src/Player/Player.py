@@ -12,16 +12,9 @@ sys.path.append('../SoundManager/')
 #sys.path.append('../Bot/')
 
 
-<<<<<<< HEAD
 from Collision.Collision import *
 from Actor.Actor import *
 from SoundManager.SoundManager import *
-=======
-from Collision import *
-from Actor import *
-from SoundManager import *
-#from Bot import *
->>>>>>> DimaBranch
 
 class APlayer(AActor):
     #private
@@ -126,11 +119,6 @@ class APlayer(AActor):
         if(not (self._Intersects(cur_Location,obstacles) == -2)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-<<<<<<< HEAD
-            self._SoundManager.playSoundLineChange()
-        # print(self._score)
-=======
->>>>>>> DimaBranch
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group(), left_edge):
@@ -141,17 +129,7 @@ class APlayer(AActor):
         if(not (self._Intersects(cur_Location,obstacles) == 2)):
             self._BoxCollision.setCoordinates(cur_Location)
             super().setActorLocation(cur_Location)
-<<<<<<< HEAD
-            self._SoundManager.playSoundLineChange()
-        # print(self._score)
-    #BoxCollision getter
-    def getCollision(self):
-        return self._BoxCollision
-    #Intersects with BoxCollision
-    def Intersects(self,Location:Vector2,obstacles:pygame.sprite.Group()):
-=======
     def _Intersects(self, Location:Vector2,obstacles)->int:
->>>>>>> DimaBranch
         temp_Collision = UBoxCollision(self._screen,Location[0],Location[1],self._w,self._h,'Orange')
         # Get the current position of the player
         player_location = temp_Collision.getCoordinates()
@@ -203,6 +181,7 @@ class APlayer(AActor):
             elif(direction ==-2):
                 self._change_score(-3)
                 return False
+        return False
             
         
 
