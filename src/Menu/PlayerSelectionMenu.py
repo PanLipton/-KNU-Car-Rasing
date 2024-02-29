@@ -2,10 +2,11 @@
 
 import pygame
 from Menu.BaseMenu import BaseMenu
+from pathlib import Path
 
 class PlayerSelectionMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
-        title_font = pygame.font.Font('../assets/fonts/pixel_font.ttf', 100)
+        title_font = pygame.font.Font(Path('../assets/fonts/pixel_font.ttf'), 100)
         super().__init__(screen, gui_manager, menu_manager, background_image_path, "Number of players", title_font)
         self.create_ui()
 
