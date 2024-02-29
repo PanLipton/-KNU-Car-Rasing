@@ -42,7 +42,7 @@ class SettingsMenu(BaseMenu):
 
     def update_volume(self):
         volume = int(self.volume_slider.get_current_value() * 100)
-        sound_manager.setMusicMenuVolume(volume / 100)
+        sound_manager.setMusicVolume(volume / 100)
 
     def draw(self):
         super().draw()

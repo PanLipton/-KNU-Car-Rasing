@@ -1,5 +1,5 @@
 import pygame
-
+from pathlib import Path
 
 class Sound:
     def __init__(self, file_path):
@@ -28,10 +28,11 @@ class SoundManager:
         pygame.mixer.init()
 
         # Звуки для різних подій
-        self.music_menu = Sound('../assets/music/musicMenu.mp3')
-        self.music_game = Sound('../assets/music/musicGame.mp3')
-        self.sound_button = Sound('../assets/music/soundButton.mp3')
-        self.sound_crash = Sound('../assets/music/soundCollision.mp3')
+        self.music_menu = Sound(Path('../assets/music/musicMenu.mp3'))
+        self.music_game = Sound(Path('../assets/music/musicGame.mp3'))
+        self.sound_button = Sound(Path('../assets/music/soundButton.mp3'))
+        self.sound_crash = Sound(Path('../assets/music/soundCollision.mp3'))
+        self.sound_win = Sound(Path('../assets/music/soundWin.mp3'))
 
 
 
@@ -48,7 +49,11 @@ class SoundManager:
 
     def playSoundCrash(self):
         self.sound_crash.play()
-    def setMusicMenuVolume(self, volume):
+
+    def playSoundWin(self):
+        self.sound_win.play()
+    def setMusicVolume(self, volume):
+        self.music_game.set_volume(volume)
         self.music_menu.set_volume(volume)
 
     def stop_all(self):

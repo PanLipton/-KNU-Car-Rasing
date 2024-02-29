@@ -7,6 +7,7 @@ import random
 from Bot.Bot import Bot
 from pathlib import Path
 
+
 class GameScene:
     def __init__(self, screen, num_players):
         self.screen = screen
@@ -26,18 +27,16 @@ class GameScene:
         self.init_road()
         self.init_players()
 
-
     def init_road(self):
         road_image_path = Path('../assets/img/road-6-lines.png')
         self.road1 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2.rect.y = -self.road2.rect.height  # Початкова позиція для другої дороги
-        
 
     def init_players(self):
         x_position = [289.3, 584.7, 1034.1]
         for i in range(self.num_players):
-            player_image_path = Path(f'../assets/cars/player-car-{i+1}.png')
+            player_image_path = Path(f'../assets/cars/player-car-{i + 1}.png')
             player = APlayer(self.screen, player_image_path, x_position[i], 500, 70, 118)
             self.players.append(player)
 
@@ -60,23 +59,21 @@ class GameScene:
     def spawn_bot(self):
         bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png", "bot-4.png", "bot-5.png", "bot-6.png"])
         random_lines_coordinates = [289.3, 432.79, 584.7, 736.6, 889.9, 1034.1]
-        
+
         for _ in range(10):  # Обмежуємо кількість спроб
             # Вибір випадкової позиції
             start_x = random.choice(random_lines_coordinates) + random.choice([-1, 1]) * random.randrange(1, 5)
-            
+
             # Створення тимчасового rect для перевірки перекриття
             temp_rect = pygame.Rect(start_x, -118, 70, 118)
-            
+
             # Перевірка на перекриття з існуючими ботами
             collision = any(temp_rect.colliderect(bot.rect) for bot in self.obstacles)
-            
+
             if not collision:
                 new_bot = Bot(self.screen, bot_model, start_x, -118, 70, 118)
                 self.obstacles.add(new_bot)
                 break
-        
-
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -87,11 +84,11 @@ class GameScene:
             self.spawn_delay = max(80, self.spawn_delay - 7)  # Зменшуйте затримку спавну, але не менше 200 мс
             self.last_difficulty_increase_time = current_time
         left_edge, right_edge = self.road1.get_edge_coordinates()
-        
+
         if current_time - self.last_spawn_time > self.spawn_delay:
             self.spawn_bot()
-            self.last_spawn_time = current_time     
-        # Керування для гравця 1
+            self.last_spawn_time = current_time
+            # Керування для гравця 1
         if self.num_players >= 1:
             if keys[pygame.K_w]: self.players[0].MoveUP(0.7, self.obstacles)
             if keys[pygame.K_s]: self.players[0].MoveDown(0.7, self.obstacles)
@@ -107,7 +104,7 @@ class GameScene:
             if keys[pygame.K_DOWN]: self.players[2].MoveDown(0.7, self.obstacles)
             if keys[pygame.K_LEFT]: self.players[2].MoveLeft(0.7, self.obstacles, left_edge)
             if keys[pygame.K_RIGHT]: self.players[2].MoveRight(0.7, self.obstacles, right_edge)
-        
+
         for bot in list(self.obstacles):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
             bot.MoveDown(self.bot_speed)
             if bot.getActorLocation()[1] > 900:  # Перевірка чи бот вийшов за межі екрану
@@ -124,7 +121,7 @@ class GameScene:
         isGameEnded = False
         for player in self.players:
             isGameEnded = player.update(self.obstacles)
-        print(isGameEnded)
+
 
     def draw(self):
         # Малювання дороги
