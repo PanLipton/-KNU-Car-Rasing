@@ -6,38 +6,41 @@ from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
 
+sys.path.append("../Collision")
+
+from Collision import *
 
 class AActor(pygame.sprite.Sprite):
-    screen=None
+    _screen=None
     _x=0
     _y=0
     _w=0
     _h=0
-    _rect = pygame.Rect(0,0,0,0)
+    _BoxCollision=None
     def __init__(self,screen,image,x,y,w,h):
         super().__init__()
         self._x = x
         self._y = y
         self._w = w
         self._h = h
-        self.image = image
-        self.image = pygame.transform.scale(image,(w,h))
-        self.screen = screen
-        self._rect = pygame.Rect(x,y,w,h)
-        self.FRotator = 90
+        self._image = image
+        self._image = pygame.transform.scale(self._image,(w,h))
+        self._screen = screen
+        self._BoxCollision = UBoxCollision(self._screen,self._x,self._y,self._w,self._h,"Orange")
     def draw(self):
-        # Calculate the rotation angle based on the FRotator
-        angle = self.FRotator
-        rotated_image = pygame.transform.rotate(self.image, angle-90)
-        self.rect = self.image.get_rect(center=(self._x,self._y))
-        # Blit the rotated image using the new center position
-        self.screen.blit(rotated_image, self.rect.center)
-
+        self._screen.blit(self._image, (self._x,self._y))
+        self._BoxCollision.draw()
     def getActorLocation(self)->Vector2:
         return Vector2(self._x,self._y)
     def setActorLocation(self,Location:Vector2):
         self._x = Location[0]
         self._y = Location[1]
+        self._BoxCollision.setCoordinates(Vector2(self._x,self._y))
+    def getCollision(self)->UBoxCollision:
+        return self._BoxCollision
+    def Intersects(self,enemy:'AActor')->bool:
+        return self._BoxCollision.itteract(enemy.getCollision())
+        
 
 
 """
@@ -48,7 +51,8 @@ pygame.init()
 
 #initialize screen object
 screen = pygame.display.set_mode((1000,1000))
-actor = AActor(screen,"pink-car.png",0,0,50,100)
+actor = AActor(screen,"../../assets/cars/pink-car.png",0,0,50,100)
+actor1 = AActor(screen,"../../assets/cars/pink-car.png",40,0,50,100)
 clock = pygame.time.Clock()
 #Title
 pygame.display.set_caption("Car Racing")
@@ -67,17 +71,10 @@ while True:
         move_x = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
         move_y = keys[pygame.K_DOWN] - keys[pygame.K_UP]
         actor.setActorLocation((move_x * 5, move_y * 5))
-    # Get the mouse position as the target point
-    target_point = Vector2(500,500)
-
-    # Find rotation vector towards the target point
-    player_rotation_vector = actor.FindLookAtRotation(actor.getActorLocation(), target_point)
-
-    # Set player rotation based on the rotation vector
-    actor.setActorRotation(player_rotation_vector)
-    
+        print(actor.Intersects(actor1))
     screen.fill([255, 255, 255])
     actor.draw()
+    actor1.draw()
     #update screen
     pygame.display.update()
     clock.tick(60)
