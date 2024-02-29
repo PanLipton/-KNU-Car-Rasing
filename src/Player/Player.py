@@ -68,7 +68,10 @@ class APlayer(AActor):
                 pygame.display.flip()  # Update the display after blitting each frame
                 pygame.time.wait(50)  # Adjust the delay between frames as needed
 
-
+    def change_score(self,decimal:int):
+        self._score +=decimal
+        if(self._score < 0):
+            self._score = 0
     def get_score(self)->int:
         return self._score;
     #Drawing 
@@ -108,7 +111,7 @@ class APlayer(AActor):
         
 
 
-
+"""
 #test APlayer game loop
 
 #init game
@@ -161,5 +164,5 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-
+"""
 
