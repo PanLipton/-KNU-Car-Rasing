@@ -13,11 +13,13 @@ class GameScene:
         self.num_players = num_players
         self.players = []  # Список гравців
         self.obstacles = pygame.sprite.Group()
-        self.spawn_delay = 175  # Початкова затримка спавну ботів в мілісекундах
+        self.spawn_delay = 3000  # Початкова затримка спавну ботів в мілісекундах
         self.bot_speed = 1  # Початкова швидкість ботів
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
-        self.difficulty_increase_interval = 30000  # Інтервал збільшення складності (30 секунд)
+        self.difficulty_increase_interval = 1000  # Інтервал збільшення складності (30 секунд)
         self.last_difficulty_increase_time = pygame.time.get_ticks()  # Останнє збільшення складності
+        self.isGameEnded = False
+        self.clock = pygame.time.Clock()
 
         self.init_game()
 
@@ -54,7 +56,7 @@ class GameScene:
 
             self.update()  # Оновлення логіки гри
             self.draw()  # Малювання сцени гри
-
+            self.clock.tick(300)
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
     def spawn_bot(self):
@@ -83,8 +85,8 @@ class GameScene:
         current_time = pygame.time.get_ticks()
         self.update_scores()
         if current_time - self.last_difficulty_increase_time > self.difficulty_increase_interval:
-            self.bot_speed += 0.2  # Збільшуйте швидкість ботів
-            self.spawn_delay = max(80, self.spawn_delay - 7)  # Зменшуйте затримку спавну, але не менше 200 мс
+            self.bot_speed += 0.005  # Збільшуйте швидкість ботів
+            self.spawn_delay = max(350, self.spawn_delay - 75)  # Зменшуйте затримку спавну, але не менше 200 мс
             self.last_difficulty_increase_time = current_time
         left_edge, right_edge = self.road1.get_edge_coordinates()
         
@@ -113,7 +115,7 @@ class GameScene:
             if bot.getActorLocation()[1] > 900:  # Перевірка чи бот вийшов за межі екрану
                 self.obstacles.remove(bot)  # Видалення бота з групи перешкод
 
-        roadspeed = 0.7
+        roadspeed = 1.7
         self.road1.update(roadspeed)
         self.road2.update(roadspeed)
         # Переміщення дороги назад вгору, коли вона повністю з'являється на екрані
@@ -121,10 +123,10 @@ class GameScene:
             self.road1.rect.y = -self.screen.get_height()
         if self.road2.rect.top >= self.screen.get_height():
             self.road2.rect.y = -self.screen.get_height()
-        isGameEnded = False
         for player in self.players:
-            isGameEnded = player.update(self.obstacles)
-        print(isGameEnded)
+            self.isGameEnded = player.update(self.obstacles)
+        if self.isGameEnded == True:
+            pygame.quit()
 
     def draw(self):
         # Малювання дороги
