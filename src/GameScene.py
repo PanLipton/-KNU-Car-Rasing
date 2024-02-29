@@ -6,8 +6,8 @@ from Player.Player import APlayer
 import random
 from Bot.Bot import Bot
 from pathlib import Path
-
-
+from GameOverScreen import GameOverScreen
+from src.SoundManager.SoundManager import sound_manager
 class GameScene:
     def __init__(self, screen, num_players):
         self.screen = screen
@@ -19,7 +19,7 @@ class GameScene:
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
         self.difficulty_increase_interval = 30000  # Інтервал збільшення складності (30 секунд)
         self.last_difficulty_increase_time = pygame.time.get_ticks()  # Останнє збільшення складності
-
+        sound_manager.playMusicGame()
         self.init_game()
 
     def init_game(self):
@@ -55,6 +55,11 @@ class GameScene:
             self.draw()  # Малювання сцени гри
 
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
+
+
+    def show_game_over_screen(self):
+        game_over_screen = GameOverScreen(self.screen)
+        game_over_screen.run()
 
     def spawn_bot(self):
         bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png", "bot-4.png", "bot-5.png", "bot-6.png"])
@@ -118,10 +123,14 @@ class GameScene:
             self.road1.rect.y = -self.screen.get_height()
         if self.road2.rect.top >= self.screen.get_height():
             self.road2.rect.y = -self.screen.get_height()
+
         isGameEnded = False
         for player in self.players:
             isGameEnded = player.update(self.obstacles)
-
+            # Проверка на завершение игры
+            if isGameEnded:
+                self.show_game_over_screen()  # Показ экрана конца игры
+                running = False  # Остановка основного цикла
 
     def draw(self):
         # Малювання дороги

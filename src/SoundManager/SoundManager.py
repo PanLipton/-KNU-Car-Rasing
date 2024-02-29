@@ -53,6 +53,7 @@ class SoundManager:
     def playSoundWin(self):
         self.sound_win.play()
     def setMusicVolume(self, volume):
+
         self.music_game.set_volume(volume)
         self.music_menu.set_volume(volume)
 
