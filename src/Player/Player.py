@@ -42,6 +42,7 @@ class APlayer(AActor):
         # Load explosion frames/images
         self._score = 0
         self._load_explosion_frames("explosion.png", 512, 512)
+        self.is_active = True  # Гравець активний на початку гри
 
 
     #Load explosion animations
@@ -170,10 +171,12 @@ class APlayer(AActor):
             if(direction ==1):
                 self._SoundManager.playSoundCrash()
                 self._play_explosion_animation(self._x,self._y)
+                self.is_active = False
                 return True
             elif(direction ==-1):
                 self._SoundManager.playSoundCrash()
                 self._play_explosion_animation(self._x,self._y)
+                self.is_active = False
                 return True
             elif(direction ==2):
                 self._change_score(-3)
