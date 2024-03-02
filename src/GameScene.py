@@ -139,6 +139,15 @@ class GameScene:
 
 
     def draw(self):
-            self.renderer.draw_road(self.road1, self.road2)
-            self.renderer.draw_bots(self.obstacles)
-            self.renderer.draw_players(self.players)
+        # Відмальовуємо дорогу
+        self.renderer.draw_road(self.road1, self.road2)
+        # Відмальовуємо гравців
+        self.renderer.draw_players(self.players)
+        # Відмальовуємо анімацію вибуху для кожного гравця, якщо вона активна
+        self.renderer.draw_explosions(self.players)
+        # Відмальовуємо інші елементи гри
+        self.renderer.draw_bots(self.obstacles)
+
+        
+
+    

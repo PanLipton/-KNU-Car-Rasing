@@ -5,6 +5,7 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
+import time
 
 sys.path.append('../Actor/')
 sys.path.append('../Collision/')
@@ -43,8 +44,9 @@ class APlayer(AActor):
         self._score = 0
         self._load_explosion_frames("explosion.png", 512, 512)
         self.is_active = True  # Гравець активний на початку гри
-
-
+        self._last_frame_time = None
+        self._animation_frame_index = 0
+        self._is_explosion_anim_playing = False
     #Load explosion animations
     def _load_explosion_frames(self, exp_image, frame_width, frame_height):
         self._explosion_animation = []  # Initialize the list to store explosion frames
@@ -66,17 +68,34 @@ class APlayer(AActor):
 
     #Play explosion animations
     def _play_explosion_animation(self, player_x, player_y):
-        if self._explosion_animation:
-            for frame in self._explosion_animation:
-                frame_rect = frame.get_rect()
-                frame_rect.center = (player_x, player_y)
-                frame_x = frame_rect.topleft[0]+ self._w/2
-                frame_y = frame_rect.topleft[1]+ self._h/2
-                # Set the frame's center to match player's position
-                self._screen.blit(frame, (frame_x,frame_y))  # Blit the frame at the adjusted position
-                pygame.display.flip()  # Update the display after blitting each frame
-                pygame.time.wait(50)  # Adjust the delay between frames as needed
+        if not self._is_explosion_anim_playing:
+            self._is_explosion_anim_playing = True
+            self._animation_frame_index = 0
+            self._last_frame_time = time.time()
 
+        if self._is_explosion_anim_playing:
+            if time.time() - self._last_frame_time >= 0.05:
+                frame = self._explosion_animation[self._animation_frame_index]
+                frame_rect = frame.get_rect()
+                
+                # Розрахунок позиції кадру так, щоб центр кадру співпадав з центром машини гравця
+                frame_x = player_x + (self._w / 2) - (frame_rect.width / 2)
+                frame_y = player_y + (self._h / 2) - (frame_rect.height / 2)
+
+                self._screen.blit(frame, (frame_x, frame_y))
+                pygame.display.flip()
+
+                self._last_frame_time = time.time()
+                self._animation_frame_index += 1
+
+                if self._animation_frame_index >= len(self._explosion_animation):
+                    self._is_explosion_anim_playing = False
+                    self._animation_frame_index = 0
+                    self.is_active = False
+
+
+
+                
     
     def _change_score(self,decimal:int):
         self._score +=decimal
@@ -84,6 +103,14 @@ class APlayer(AActor):
             self._score = 0
     def get_score(self)->int:
         return self._score;
+    def draw_explosion(self):
+        if self._is_explosion_anim_playing and self._animation_frame_index < len(self._explosion_animation):
+            frame = self._explosion_animation[self._animation_frame_index]
+            frame_rect = frame.get_rect()
+            frame_rect.center = (self._x + self._w / 2, self._y + self._h / 2)
+
+            self._screen.blit(frame, frame_rect.topleft)
+            self._last_frame_time = pygame.time.get_ticks()
     #Drawing 
     def draw(self):
         super().draw()
@@ -93,6 +120,8 @@ class APlayer(AActor):
         
     #Moving Up
     def MoveUP(self,distance:int,obstacles:pygame.sprite.Group()):
+        if self._is_explosion_anim_playing:
+            return
         cur_Location = super().getActorLocation()
         if ((cur_Location[1]-distance))<0:
             return
@@ -102,6 +131,8 @@ class APlayer(AActor):
             super().setActorLocation(cur_Location)
     #Moving Down
     def MoveDown(self,distance:int,obstacles:pygame.sprite.Group()):
+        if self._is_explosion_anim_playing:
+            return
         cur_Location = super().getActorLocation()
         if ((cur_Location[1]-distance))>810:
             return
@@ -113,6 +144,8 @@ class APlayer(AActor):
             
     #Moving Right
     def MoveRight(self,distance:int,obstacles:pygame.sprite.Group(), right_edge):
+        if self._is_explosion_anim_playing:
+            return
         cur_Location = super().getActorLocation()
         if right_edge<=((cur_Location[0]+distance+self._w)):
             return
@@ -123,6 +156,8 @@ class APlayer(AActor):
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group(), left_edge):
+        if self._is_explosion_anim_playing:
+            return
         cur_Location = super().getActorLocation()
         if ((cur_Location[0]+distance))<=left_edge:
             return
@@ -166,24 +201,29 @@ class APlayer(AActor):
         return 0  # No collision
     
     def update(self,obstacles)->bool:
-        direction = self._Intersects(super().getActorLocation(),obstacles)
-        if(not direction ==0):
-            if(direction ==1):
-                self._SoundManager.playSoundCrash()
-                self._play_explosion_animation(self._x,self._y)
+        # Якщо анімація вибуху вже грає, продовжуємо її відтворення
+        if self._is_explosion_anim_playing:
+            self._play_explosion_animation(self._x, self._y)
+            return False  # Повертаємо False, щоб індикувати, що гравець зараз не може взаємодіяти
+
+        # Перевірка на зіткнення
+        direction = self._Intersects(super().getActorLocation(), obstacles)
+        if direction != 0:
+            # Зіткнення відбулося, і анімація вибуху ще не грає
+            self._SoundManager.playSoundCrash()
+            self._play_explosion_animation(self._x, self._y)
+            
+            # Після запуску анімації вибуху, перевіряємо, чи вона все ще грає
+            if not self._is_explosion_anim_playing:
+                # Якщо анімація завершилась, встановлюємо гравця як неактивного
                 self.is_active = False
-                return True
-            elif(direction ==-1):
-                self._SoundManager.playSoundCrash()
-                self._play_explosion_animation(self._x,self._y)
-                self.is_active = False
-                return True
-            elif(direction ==2):
-                self._change_score(-3)
-                return False
-            elif(direction ==-2):
-                self._change_score(-3)
-                return False
+                return True  # Повертаємо True, щоб індикувати, що сталося зіткнення і стан гравця змінився
+        elif(direction ==2):
+            self._change_score(-3)
+            return False
+        elif(direction ==-2):
+            self._change_score(-3)
+            return False
         return False
             
         
