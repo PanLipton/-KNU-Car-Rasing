@@ -8,7 +8,7 @@ from pygame.math import Vector2
 
 sys.path.append("../Collision")
 
-from Collision import *
+from Collision.Collision import *
 
 class AActor(pygame.sprite.Sprite):
     _screen=None

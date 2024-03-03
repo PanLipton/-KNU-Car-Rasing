@@ -193,8 +193,8 @@ bot_actors.add(bot,bot1)
 all_sprite.add(player_actors,bot_actors)
 #Obstacles
 obstacles = []
-right = UBoxCollision(screen,0,0,100,1000,'Orange')
-left = UBoxCollision(screen,900,0,100,1000,'Orange')
+left = UBoxCollision(screen,0,0,100,1000,'Orange')
+right = UBoxCollision(screen,900,0,100,1000,'Orange')
 top = UBoxCollision(screen,100,0,900,100,'Orange')
 bottom = UBoxCollision(screen,100,800,800,100,'Orange')
 obstacles.append(right)
