@@ -15,7 +15,7 @@ class GameScene:
         self.screen = screen
         self.num_players = num_players
         self.players = []  # Список гравців
-        self.enemies = pygame.sprite.Group()
+        self.obstacles = pygame.sprite.Group()
         self.spawn_delay = 3000  # Початкова затримка спавну ботів в мілісекундах
         self.bot_speed = 1  # Початкова швидкість ботів
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
@@ -83,11 +83,11 @@ class GameScene:
             temp_rect = pygame.Rect(start_x, -118, 70, 118)
             
             # Перевірка на перекриття з існуючими ботами
-            collision = any(temp_rect.colliderect(bot.rect) for bot in self.enemies.sprites())
+            collision = any(temp_rect.colliderect(bot.rect) for bot in self.obstacles)
             
             if not collision:
                 new_bot = Bot(self.screen, bot_model, start_x, -118, 70, 118)
-                self.enemies.add(new_bot)
+                self.obstacles.add(new_bot)
                 break
         
 
@@ -129,13 +129,13 @@ class GameScene:
             if keys[pygame.K_LEFT]: self.players[2].MoveLeft(0.7, self._obstacles)
             if keys[pygame.K_RIGHT]: self.players[2].MoveRight(0.7, self._obstacles)
         
-        for bot in list(self.enemies):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
+        for bot in list(self.obstacles):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
             bot.MoveDown(self.bot_speed)
             if bot.getActorLocation()[1] > 900:  # Перевірка чи бот вийшов за межі екрану
-                self.enemies.remove(bot)  # Видалення бота з групи перешкод
+                self.obstacles.remove(bot)  # Видалення бота з групи перешкод
         players_group = pygame.sprite.Group(self.players)
         all_sprites = pygame.sprite.Group()
-        all_sprites.add(players_group,self.enemies)
+        all_sprites.add(players_group,self.obstacles)
         roadspeed = 1.7
         self.road1.update(roadspeed)
         self.road2.update(roadspeed)
@@ -161,7 +161,7 @@ class GameScene:
         # Відмальовуємо анімацію вибуху для кожного гравця, якщо вона активна
         self.renderer.draw_explosions(self.players)
         # Відмальовуємо інші елементи гри
-        self.renderer.draw_bots(self.enemies)
+        self.renderer.draw_bots(self.obstacles)
         
 
         
