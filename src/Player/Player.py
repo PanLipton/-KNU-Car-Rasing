@@ -5,16 +5,16 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
-#pyganim module
-#import pyganim
 
 sys.path.append('../Actor/')
 sys.path.append('../SoundManager/')
 sys.path.append('../Bot/')
+#sys.path.append('../Collision/')
 
 from Bot import *
 from Actor import *
 from SoundManager import *
+#from Collision import *
 
 class APlayer(AActor):
     #private
@@ -78,29 +78,65 @@ class APlayer(AActor):
     def draw(self):
         super().draw()
     #Moving Up
-    def MoveUP(self,distance:int):
+    def MoveUP(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
         cur_Location[1]-=distance
-        super().setActorLocation(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
+            super().setActorLocation(cur_Location)
     #Moving Down
-    def MoveDown(self,distance:int):
+    def MoveDown(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
         cur_Location[1]+=distance
-        super().setActorLocation(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
+            super().setActorLocation(cur_Location)
             
     #Moving Right
-    def MoveRight(self,distance:int):
+    def MoveRight(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
         cur_Location[0]+=distance
-        super().setActorLocation(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
+            super().setActorLocation(cur_Location)
             
     #Moving Left
-    def MoveLeft(self,distance:int):
+    def MoveLeft(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
         cur_Location[0]-=distance
-        super().setActorLocation(cur_Location)
-    def update(self,obstacles:pygame.sprite.Group()):
-        for enemy in obstacles:
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
+            super().setActorLocation(cur_Location)
+    def update(self,enemies:pygame.sprite.Group()):
+        for enemy in enemies:
             if(self!=enemy):
                 if(super().Intersects(enemy)):
                     self._SoundManager.playSoundCrash()
@@ -110,7 +146,6 @@ class APlayer(AActor):
     
         
 
-
 """
 #test APlayer game loop
 
@@ -119,6 +154,7 @@ pygame.init()
 
 #initialize screen object
 screen = pygame.display.set_mode((1000,1000))
+#Sprite Groups for enemies
 all_sprite = pygame.sprite.Group()
 player_actors = pygame.sprite.Group()
 bot_actors = pygame.sprite.Group()
@@ -126,10 +162,20 @@ player = APlayer(screen,"pink-car.png",300,500,50,100)
 player1 = APlayer(screen,"pink-car.png",300,100,50,100)
 bot = Bot(screen,"pink-car.png",250,100,50,100)
 bot1 = Bot(screen,"pink-car.png",450,100,50,100)
-
 player_actors.add(player,player1)
 bot_actors.add(bot,bot1)
 all_sprite.add(player_actors,bot_actors)
+#Obstacles
+obstacles = []
+right = UBoxCollision(screen,0,0,100,1000,'Orange')
+left = UBoxCollision(screen,900,0,100,1000,'Orange')
+top = UBoxCollision(screen,100,0,900,100,'Orange')
+bottom = UBoxCollision(screen,100,800,800,100,'Orange')
+obstacles.append(right)
+obstacles.append(left)
+obstacles.append(top)
+obstacles.append(bottom)
+
 clock = pygame.time.Clock()
 #Title
 pygame.display.set_caption("Car Racing")
@@ -146,13 +192,13 @@ while True:
             exit()
         keys = pygame.key.get_pressed()
         if keys[K_LEFT]:
-            player.MoveLeft(10)
+            player.MoveLeft(10,obstacles)
         if keys[K_RIGHT]:
-            player.MoveRight(10)
+            player.MoveRight(10,obstacles)
         if keys[K_DOWN]:
-            player.MoveDown(10)
+            player.MoveDown(10,obstacles)
         if keys[K_UP]:
-            player.MoveUP(10)
+            player.MoveUP(10,obstacles)
     player.update(all_sprite)
     for bot in bot_actors:
         bot.MoveDown(1)
@@ -161,8 +207,10 @@ while True:
     player1.draw()
     for bot in bot_actors:
         bot.draw()
+    for collision in obstacles:
+        collision.draw()
     #update screen
     pygame.display.update()
     clock.tick(60)
+    
 """
-
