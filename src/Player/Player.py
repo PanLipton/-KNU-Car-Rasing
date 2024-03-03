@@ -5,75 +5,101 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
+import time
 
 sys.path.append('../Actor/')
 sys.path.append('../SoundManager/')
-sys.path.append('../Bot/')
-#sys.path.append('../Collision/')
 
-from Bot import *
-from Actor import *
-from SoundManager import *
-#from Collision import *
+from Actor.Actor import *
+from SoundManager.SoundManager import *
 
 class APlayer(AActor):
     #private
     _SoundManager=None
     _score = None
     _explosion_animation = None
-
+    
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
-        script_directory = os.path.dirname(os.path.abspath("../"))
-        player_image_path = os.path.join("assets/cars",image)
-        self._image = pygame.image.load(os.path.join(script_directory, player_image_path))
+        try:
+            self._image = pygame.image.load(image).convert_alpha()
+        except FileNotFoundError:
+            print(f"Error: File not found - {image}")
+            sys.exit(1)
+
+        self._image = pygame.transform.scale(self._image, (w, h))
         self._screen = screen
         #Call AActor Constructor
         super().__init__(self._screen,self._image,x,y,w,h)
         self._SoundManager = SoundManager()
         # Load explosion frames/images
         self._score = 0
-        self._load_explosion_frames("explosion.png",512,512)
-
-
+        self._load_explosion_frames("explosion.png", 512, 512)
+        self.is_active = True  # Гравець активний на початку гри
+        self._last_frame_time = None
+        self._animation_frame_index = 0
+        self._is_explosion_anim_playing = False
     #Load explosion animations
     def _load_explosion_frames(self, exp_image, frame_width, frame_height):
         self._explosion_animation = []  # Initialize the list to store explosion frames
-        script_directory = os.path.dirname(os.path.abspath("../"))  # Get the directory of the current script
-        player_image_path = os.path.join("assets/animations/explosion",exp_image)
-        exp_image_path = os.path.join(script_directory, player_image_path)  # Construct the path to the explosion image
-        print("Explosion image path:", exp_image_path)
-        explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()  # L
-        sheet_width, sheet_height = explosion_sheet.get_size()
-        rows = sheet_height // frame_height
-        cols = sheet_width // frame_width
-        for y in range(rows):
-            for x in range(cols):
-                frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
-                self._explosion_animation.append(frame)
-
+        # Прямий шлях до зображення вибуху
+        exp_image_path = os.path.join('..','assets', 'animations', 'explosion', exp_image)
+        try:
+            explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()
+            sheet_width, sheet_height = explosion_sheet.get_size()
+            rows = sheet_height // frame_height
+            cols = sheet_width // frame_width
+            for y in range(rows):
+                for x in range(cols):
+                    frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
+                    self._explosion_animation.append(frame)
+        except FileNotFoundError:
+            print(f"Error: File not found - {exp_image_path}")
+            sys.exit(1)
 
 
     #Play explosion animations
     def _play_explosion_animation(self, player_x, player_y):
-        if self._explosion_animation:
-            for frame in self._explosion_animation:
+        if not self._is_explosion_anim_playing:
+            self._is_explosion_anim_playing = True
+            self._animation_frame_index = 0
+            self._last_frame_time = time.time()
+
+        if self._is_explosion_anim_playing:
+            if time.time() - self._last_frame_time >= 0.05:
+                frame = self._explosion_animation[self._animation_frame_index]
                 frame_rect = frame.get_rect()
-                frame_rect.center = (player_x, player_y)
-                frame_x = frame_rect.topleft[0]+ self._w/2
-                frame_y = frame_rect.topleft[1]+ self._h/2
-                # Set the frame's center to match player's position
-                self._screen.blit(frame, (frame_x,frame_y))  # Blit the frame at the adjusted position
-                pygame.display.flip()  # Update the display after blitting each frame
-                pygame.time.wait(50)  # Adjust the delay between frames as needed
+                
+                # Розрахунок позиції кадру так, щоб центр кадру співпадав з центром машини гравця
+                frame_x = player_x + (self._w / 2) - (frame_rect.width / 2)
+                frame_y = player_y + (self._h / 2) - (frame_rect.height / 2)
+
+                self._screen.blit(frame, (frame_x, frame_y))
+                pygame.display.flip()
+
+                self._last_frame_time = time.time()
+                self._animation_frame_index += 1
+
+                if self._animation_frame_index >= len(self._explosion_animation):
+                    self._is_explosion_anim_playing = False
+                    self._animation_frame_index = 0
+                    self.is_active = False
 
     def change_score(self,decimal:int):
         self._score +=decimal
         if(self._score < 0):
             self._score = 0
     def get_score(self)->int:
-        return self._score;
+        return self._score
+    def draw_explosion(self):
+        if self._is_explosion_anim_playing and self._animation_frame_index < len(self._explosion_animation):
+            frame = self._explosion_animation[self._animation_frame_index]
+            frame_rect = frame.get_rect()
+            frame_rect.center = (self._x + self._w / 2, self._y + self._h / 2)
+
+            self._screen.blit(frame, frame_rect.topleft)
+            self._last_frame_time = pygame.time.get_ticks()
     #Drawing 
     def draw(self):
         super().draw()
