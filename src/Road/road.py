@@ -1,4 +1,5 @@
 import pygame
+
 class Road(pygame.sprite.Sprite):
     def __init__(self, image_path, screen_width, screen_height):
         super().__init__()
@@ -6,7 +7,7 @@ class Road(pygame.sprite.Sprite):
         self.screen_width = screen_width
         original_image = pygame.image.load(image_path).convert_alpha()
         self.y_offset = 0  # Додатковий змінний для зберігання дробової частини зміщення
-
+        
         # Ширина дороги - половина ширини екрану
         road_width = self.screen_width // 1.5
         # Зберегти оригінальне співвідношення сторін зображення
@@ -14,6 +15,7 @@ class Road(pygame.sprite.Sprite):
         
         self.image = pygame.transform.scale(original_image, (road_width, self.screen_height))
         self.rect = self.image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
     
     def update(self, speed):
         self.y_offset += speed  # Додаємо дробову швидкість до дробової частини
@@ -30,4 +32,5 @@ class Road(pygame.sprite.Sprite):
         left_edge = center_x - half_width
         right_edge = center_x + half_width
         return left_edge, right_edge
+        
 
