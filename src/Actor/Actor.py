@@ -1,5 +1,5 @@
-import pygame #imort pygame module
-from sys import exit #imort sys module
+import pygame  # imort pygame module
+from sys import exit  # imort sys module
 import sys
 import os
 from pygame.locals import *
@@ -10,37 +10,43 @@ sys.path.append("../Collision")
 
 from Collision.Collision import *
 
+
 class AActor(pygame.sprite.Sprite):
-    _screen=None
-    _x=0
-    _y=0
-    _w=0
-    _h=0
-    _BoxCollision=None
-    def __init__(self,screen,image,x,y,w,h):
+    _screen = None
+    _x = 0
+    _y = 0
+    _w = 0
+    _h = 0
+    _BoxCollision = None
+
+    def __init__(self, screen, image, x, y, w, h):
         super().__init__()
         self._x = x
         self._y = y
         self._w = w
         self._h = h
         self._image = image
-        self._image = pygame.transform.scale(self._image,(w,h))
+        self._image = pygame.transform.scale(self._image, (w, h))
         self._screen = screen
-        self._BoxCollision = UBoxCollision(self._screen,self._x,self._y,self._w,self._h,"Orange")
+        self._BoxCollision = UBoxCollision(self._screen, self._x, self._y, self._w, self._h, "Orange")
+
     def draw(self):
-        self._screen.blit(self._image, (self._x,self._y))
+        self._screen.blit(self._image, (self._x, self._y))
         self._BoxCollision.draw()
-    def getActorLocation(self)->Vector2:
-        return Vector2(self._x,self._y)
-    def setActorLocation(self,Location:Vector2):
+
+    def getActorLocation(self) -> Vector2:
+        return Vector2(self._x, self._y)
+
+    def setActorLocation(self, Location: Vector2):
         self._x = Location[0]
         self._y = Location[1]
-        self._BoxCollision.setCoordinates(Vector2(self._x,self._y))
-    def getCollision(self)->UBoxCollision:
+        self._BoxCollision.setCoordinates(Vector2(self._x, self._y))
+
+    def getCollision(self) -> UBoxCollision:
         return self._BoxCollision
-    def Intersects(self,enemy:'AActor')->bool:
+
+    def Intersects(self, enemy: 'AActor') -> bool:
         return self._BoxCollision.itteract(enemy.getCollision())
-        
 
 
 """

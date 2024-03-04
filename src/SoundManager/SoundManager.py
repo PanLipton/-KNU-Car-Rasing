@@ -2,7 +2,7 @@ import pygame
 from pathlib import Path
 import struct
 class Sound:
-    def init(self, file_path):
+    def __init__(self, file_path):
         self.sound = pygame.mixer.Sound(file_path)
 
     def play(self):
@@ -72,5 +72,3 @@ class SoundManager:
 
 
 sound_manager = SoundManager()
-
-

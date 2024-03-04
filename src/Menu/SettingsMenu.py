@@ -10,7 +10,6 @@ class SettingsMenu(BaseMenu):
         super().__init__(screen, gui_manager, menu_manager, background_image_path, "Car Racing", title_font)
         self.slider_position = 0.5  # Значення за замовчуванням
         self.create_ui_elements()
-        #self.volume = 0.5
 
     def create_ui_elements(self):
         self.volume_label = pygame_gui.elements.UILabel(
@@ -53,4 +52,3 @@ class SettingsMenu(BaseMenu):
         super().handle_event(event)
         if event.type == pygame.USEREVENT and event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             self.update_volume()
-

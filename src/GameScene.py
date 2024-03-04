@@ -11,8 +11,10 @@ from GameRenderer import GameRenderer
 from GameOverScreen import GameOverScreen
 from SoundManager.SoundManager import sound_manager
 
+
 class GameScene:
     _obstacles = []
+
     def __init__(self, screen, num_players):
         self.screen = screen
         self.num_players = num_players
@@ -36,15 +38,15 @@ class GameScene:
         sound_manager.playMusicGame()
 
         self.init_game()
-        #Collision for Road
-        #Top
-        #self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
-        #Bottom
-        #self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
-        #Left
-        self._obstacles.append(UBoxCollision(screen,0,0,200,screen.get_height(),'Orange'))
-        #Right
-        self._obstacles.append(UBoxCollision(screen,screen.get_width()-100,0,200,screen.get_height(),'Orange'))
+        # Collision for Road
+        # Top
+        # self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
+        # Bottom
+        # self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
+        # Left
+        self._obstacles.append(UBoxCollision(screen, 0, 0, 200, screen.get_height(), 'Orange'))
+        # Right
+        self._obstacles.append(UBoxCollision(screen, screen.get_width() - 100, 0, 200, screen.get_height(), 'Orange'))
 
     def init_game(self):
         # Ініціалізація дороги
@@ -80,7 +82,6 @@ class GameScene:
             self.clock.tick(300)
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
-
     def show_game_over_screen(self):
         game_over_screen = GameOverScreen(self.screen)
         game_over_screen.run()
@@ -108,7 +109,6 @@ class GameScene:
         if all(not player.is_active for player in self.players):
             self.show_game_over_screen()  # Це лише приклад, краще використовувати систему станів для керування грою
 
-
     def update(self):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
@@ -123,8 +123,8 @@ class GameScene:
         if current_time - self.last_spawn_time > self.spawn_delay:
             self.spawn_bot()
 
-            self.last_spawn_time = current_time     
-        # Керування для гравців
+            self.last_spawn_time = current_time
+            # Керування для гравців
 
             self.last_spawn_time = current_time
             # Керування для гравця 1
@@ -144,14 +144,14 @@ class GameScene:
             if keys[pygame.K_DOWN]: self.players[2].MoveDown(0.7, self._obstacles)
             if keys[pygame.K_LEFT]: self.players[2].MoveLeft(0.7, self._obstacles)
             if keys[pygame.K_RIGHT]: self.players[2].MoveRight(0.7, self._obstacles)
-        
+
         for bot in list(self.obstacles):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
             bot.MoveDown(self.bot_speed)
             if bot.getActorLocation()[1] > 900:  # Перевірка чи бот вийшов за межі екрану
                 self.obstacles.remove(bot)  # Видалення бота з групи перешкод
         players_group = pygame.sprite.Group(self.players)
         all_sprites = pygame.sprite.Group()
-        all_sprites.add(players_group,self.obstacles)
+        all_sprites.add(players_group, self.obstacles)
         roadspeed = 1.7
         self.road1.update(roadspeed)
         self.road2.update(roadspeed)
@@ -162,12 +162,10 @@ class GameScene:
             self.road2.rect.y = -self.screen.get_height()
 
         for player in self.players:
-        # Перевірка на зіткнення для кожного гравця
+            # Перевірка на зіткнення для кожного гравця
             if player.is_active:  # Перевірка, чи активний гравець
                 player.update(all_sprites)  # Оновлення активного гравця
         self.check_game_end()
-
-
 
     def draw(self):
         # Відмальовуємо дорогу
@@ -180,8 +178,7 @@ class GameScene:
         self.renderer.draw_explosions(self.players)
         # Відмальовуємо інші елементи гри
         self.renderer.draw_bots(self.obstacles)
-        
 
-        
 
-    
+
+

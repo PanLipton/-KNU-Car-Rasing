@@ -16,7 +16,6 @@ class GameController:
         self.menu_manager = MenuManager(self.screen, self.gui_manager, BACKGROUND_IMAGE_PATH)  # Передача шляху до зображення
         self.menu_manager.set_menu(MainMenu)  # Видалено зайвий аргумент
 
-
     def run(self):
         clock = pygame.time.Clock()
         running = True
