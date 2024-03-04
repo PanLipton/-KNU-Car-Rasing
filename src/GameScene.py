@@ -8,7 +8,7 @@ from Bot.Bot import Bot
 from pathlib import Path
 from GameRenderer import GameRenderer
 from GameOverScreen import GameOverScreen
-from src.SoundManager.SoundManager import sound_manager
+from SoundManager.SoundManager import sound_manager
 
 class GameScene:
     def __init__(self, screen, num_players):

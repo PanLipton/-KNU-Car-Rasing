@@ -1,7 +1,7 @@
 import pygame
 import sys
 from GameController import GameController
-from src.SoundManager.SoundManager import sound_manager
+from SoundManager.SoundManager import sound_manager
 
 
 class GameOverScreen:
