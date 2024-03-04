@@ -27,9 +27,9 @@ class GameScene:
         self.init_game()
         #Collision for Road
         #Top
-        self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
+        #self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
         #Bottom
-        self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
+        #self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
         #Left
         self._obstacles.append(UBoxCollision(screen,0,0,200,screen.get_height(),'Orange'))
         #Right
