@@ -2,6 +2,8 @@
 
 import pygame
 import pygame_gui
+from SoundManager.SoundManager import sound_manager
+
 class BaseMenu:
     def __init__(self, screen, gui_manager, menu_manager, background_image_path, title_text="", title_font=None, title_color=(255, 255, 255)):
         self.screen = screen
@@ -27,6 +29,7 @@ class BaseMenu:
     def handle_event(self, event):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                sound_manager.playSoundButton()
                 for button, action in self.buttons:
                     if event.ui_element == button:
                         action()
