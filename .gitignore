@@ -4,9 +4,7 @@ src/Collision/__pycache__/*
 src/Menu/__pycache__/*
 src/Road/__pycache__/*
 src/SoundManager/__pycache__/*
-<<<<<<< HEAD
-=======
 src/Player/__pycache__/*
->>>>>>> main
+src/Bot/__pycache__/*
 src/__pycache__/*
 
