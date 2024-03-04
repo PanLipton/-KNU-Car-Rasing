@@ -8,7 +8,7 @@ class GameRenderer:
     def draw_players(self, players):
         for player in players:
             if player.is_active:  # Малювання лише активних гравців
-                player.draw()
+                player.draw()   
 
     def draw_road(self, road1, road2):
         self.screen.blit(road1.image, road1.rect)

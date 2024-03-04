@@ -3,6 +3,7 @@ import struct
 import pygame
 from Road.Road import Road
 from Player.Player import APlayer
+from Collision.Collision import UBoxCollision
 import random
 from Bot.Bot import Bot
 from pathlib import Path
@@ -11,6 +12,7 @@ from GameOverScreen import GameOverScreen
 from SoundManager.SoundManager import sound_manager
 
 class GameScene:
+    _obstacles = []
     def __init__(self, screen, num_players):
         self.screen = screen
         self.num_players = num_players
@@ -34,6 +36,15 @@ class GameScene:
         sound_manager.playMusicGame()
 
         self.init_game()
+        #Collision for Road
+        #Top
+        #self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
+        #Bottom
+        #self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
+        #Left
+        self._obstacles.append(UBoxCollision(screen,0,0,200,screen.get_height(),'Orange'))
+        #Right
+        self._obstacles.append(UBoxCollision(screen,screen.get_width()-100,0,200,screen.get_height(),'Orange'))
 
     def init_game(self):
         # Ініціалізація дороги
@@ -55,7 +66,7 @@ class GameScene:
 
     def update_scores(self):
         for player in self.players:
-            player._change_score(1)
+            player.change_score(1)
 
     def run(self):
         running = True
@@ -119,26 +130,28 @@ class GameScene:
             # Керування для гравця 1
 
         if self.num_players >= 1:
-            if keys[pygame.K_w]: self.players[0].MoveUP(0.7, self.obstacles)
-            if keys[pygame.K_s]: self.players[0].MoveDown(0.7, self.obstacles)
-            if keys[pygame.K_a]: self.players[0].MoveLeft(0.7, self.obstacles, left_edge)
-            if keys[pygame.K_d]: self.players[0].MoveRight(0.7, self.obstacles, right_edge)
+            if keys[pygame.K_w]: self.players[0].MoveUP(0.7, self._obstacles)
+            if keys[pygame.K_s]: self.players[0].MoveDown(0.7, self._obstacles)
+            if keys[pygame.K_a]: self.players[0].MoveLeft(0.7, self._obstacles)
+            if keys[pygame.K_d]: self.players[0].MoveRight(0.7, self._obstacles)
         if self.num_players >= 2:
-            if keys[pygame.K_y]: self.players[1].MoveUP(0.7, self.obstacles)
-            if keys[pygame.K_h]: self.players[1].MoveDown(0.7, self.obstacles)
-            if keys[pygame.K_g]: self.players[1].MoveLeft(0.7, self.obstacles, left_edge)
-            if keys[pygame.K_j]: self.players[1].MoveRight(0.7, self.obstacles, right_edge)
+            if keys[pygame.K_y]: self.players[1].MoveUP(0.7, self._obstacles)
+            if keys[pygame.K_h]: self.players[1].MoveDown(0.7, self._obstacles)
+            if keys[pygame.K_g]: self.players[1].MoveLeft(0.7, self._obstacles)
+            if keys[pygame.K_j]: self.players[1].MoveRight(0.7, self._obstacles)
         if self.num_players >= 3:
-            if keys[pygame.K_UP]: self.players[2].MoveUP(0.7, self.obstacles)
-            if keys[pygame.K_DOWN]: self.players[2].MoveDown(0.7, self.obstacles)
-            if keys[pygame.K_LEFT]: self.players[2].MoveLeft(0.7, self.obstacles, left_edge)
-            if keys[pygame.K_RIGHT]: self.players[2].MoveRight(0.7, self.obstacles, right_edge)
-
+            if keys[pygame.K_UP]: self.players[2].MoveUP(0.7, self._obstacles)
+            if keys[pygame.K_DOWN]: self.players[2].MoveDown(0.7, self._obstacles)
+            if keys[pygame.K_LEFT]: self.players[2].MoveLeft(0.7, self._obstacles)
+            if keys[pygame.K_RIGHT]: self.players[2].MoveRight(0.7, self._obstacles)
+        
         for bot in list(self.obstacles):  # Використовуйте list() для копіювання, щоб уникнути помилок під час ітерації
             bot.MoveDown(self.bot_speed)
             if bot.getActorLocation()[1] > 900:  # Перевірка чи бот вийшов за межі екрану
                 self.obstacles.remove(bot)  # Видалення бота з групи перешкод
-
+        players_group = pygame.sprite.Group(self.players)
+        all_sprites = pygame.sprite.Group()
+        all_sprites.add(players_group,self.obstacles)
         roadspeed = 1.7
         self.road1.update(roadspeed)
         self.road2.update(roadspeed)
@@ -151,7 +164,7 @@ class GameScene:
         for player in self.players:
         # Перевірка на зіткнення для кожного гравця
             if player.is_active:  # Перевірка, чи активний гравець
-                player.update(self.obstacles)  # Оновлення активного гравця
+                player.update(all_sprites)  # Оновлення активного гравця
         self.check_game_end()
 
 
@@ -159,12 +172,15 @@ class GameScene:
     def draw(self):
         # Відмальовуємо дорогу
         self.renderer.draw_road(self.road1, self.road2)
+        for obstacle in self._obstacles:
+            obstacle.draw()
         # Відмальовуємо гравців
         self.renderer.draw_players(self.players)
         # Відмальовуємо анімацію вибуху для кожного гравця, якщо вона активна
         self.renderer.draw_explosions(self.players)
         # Відмальовуємо інші елементи гри
         self.renderer.draw_bots(self.obstacles)
+        
 
         
 

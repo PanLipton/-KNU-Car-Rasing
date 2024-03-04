@@ -37,19 +37,21 @@ class UBoxCollision(pygame.Rect):
         
     #draw Collision (May be used in Debug mode)    
     def draw(self):
-        pygame.draw.rect(self.screen,self.color,pygame.Rect(self.x,self.y,self.w,self.h),1)
+        pygame.draw.rect(self.screen,self.color,self,1)
         
     #Check Collision itteraction
-    def itteract(self,collision):
+    def itteract(self,collision:'UBoxCollision'):
         return self.colliderect(collision)
     def setCoordinates(self,NewCoordinates:Vector2):
         self.x = NewCoordinates[0]
         self.y = NewCoordinates[1]
-    def getCoordinates(self)->Vector2:
-        return Vector2(self.x,self.y)
-    
-    
-"""    
+        self._updateRect()
+    def _updateRect(self):
+        # Update rectangle coordinates
+        self.left = self.x
+        self.top = self.y
+
+"""
 #test Collision game loop
 
 #init game
@@ -57,9 +59,10 @@ pygame.init()
 
 #initialize screen object
 screen = pygame.display.set_mode((1000,1000))
-collision = BoxCollision(screen,50,130,50,100,'White')
-collision1 = BoxCollision(screen,49,50,50,100,'White')
+collision = UBoxCollision(screen,50,0,50,100,'White')
+collision1 = UBoxCollision(screen,50,130,50,100,'White')
 clock = pygame.time.Clock()
+collision.setCoordinates((200,300))
 print(collision1.itteract(collision))
 
 #Title

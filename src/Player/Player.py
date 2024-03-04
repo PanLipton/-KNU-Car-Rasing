@@ -8,18 +8,13 @@ from pygame.math import Vector2
 import time
 
 sys.path.append('../Actor/')
-sys.path.append('../Collision/')
 sys.path.append('../SoundManager/')
-#sys.path.append('../Bot/')
 
-
-from Collision.Collision import *
 from Actor.Actor import *
 from SoundManager.SoundManager import *
 
 class APlayer(AActor):
     #private
-    _BoxCollision=None
     _SoundManager=None
     _score = None
     _explosion_animation = None
@@ -37,8 +32,6 @@ class APlayer(AActor):
         self._screen = screen
         #Call AActor Constructor
         super().__init__(self._screen,self._image,x,y,w,h)
-        #Create Box Collision
-        self._BoxCollision = UBoxCollision(self._screen,x,y,w,h,'Orange')
         self._SoundManager = SoundManager()
         # Load explosion frames/images
         self._score = 0
@@ -93,16 +86,12 @@ class APlayer(AActor):
                     self._animation_frame_index = 0
                     self.is_active = False
 
-
-
-                
-    
-    def _change_score(self,decimal:int):
+    def change_score(self,decimal:int):
         self._score +=decimal
         if(self._score < 0):
             self._score = 0
     def get_score(self)->int:
-        return self._score;
+        return self._score
     def draw_explosion(self):
         if self._is_explosion_anim_playing and self._animation_frame_index < len(self._explosion_animation):
             frame = self._explosion_animation[self._animation_frame_index]
@@ -114,118 +103,73 @@ class APlayer(AActor):
     #Drawing 
     def draw(self):
         super().draw()
-        #Draw Collision
-        #Uncoment if you want 
-        #self.BoxCollision.draw()
-        
     #Moving Up
-    def MoveUP(self,distance:int,obstacles:pygame.sprite.Group()):
-        if self._is_explosion_anim_playing:
-            return
+    def MoveUP(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
-        if ((cur_Location[1]-distance))<0:
-            return
         cur_Location[1]-=distance
-        if(not (self._Intersects(cur_Location,obstacles) == 1)):
-            self._BoxCollision.setCoordinates(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
             super().setActorLocation(cur_Location)
     #Moving Down
-    def MoveDown(self,distance:int,obstacles:pygame.sprite.Group()):
-        if self._is_explosion_anim_playing:
-            return
+    def MoveDown(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
-        if ((cur_Location[1]-distance))>810:
-            return
         cur_Location[1]+=distance
-        if(not (self._Intersects(cur_Location,obstacles) == -1)):
-            self._BoxCollision.setCoordinates(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
             super().setActorLocation(cur_Location)
-        
             
     #Moving Right
-    def MoveRight(self,distance:int,obstacles:pygame.sprite.Group(), right_edge):
-        if self._is_explosion_anim_playing:
-            return
+    def MoveRight(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
-        if right_edge<=((cur_Location[0]+distance+self._w)):
-            return
         cur_Location[0]+=distance
-        if(not (self._Intersects(cur_Location,obstacles) == -2)):
-            self._BoxCollision.setCoordinates(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
             super().setActorLocation(cur_Location)
             
     #Moving Left
-    def MoveLeft(self,distance:int,obstacles:pygame.sprite.Group(), left_edge):
-        if self._is_explosion_anim_playing:
-            return
+    def MoveLeft(self,distance:int,obstacles=[]):
         cur_Location = super().getActorLocation()
-        if ((cur_Location[0]+distance))<=left_edge:
-            return
         cur_Location[0]-=distance
-        if(not (self._Intersects(cur_Location,obstacles) == 2)):
-            self._BoxCollision.setCoordinates(cur_Location)
+        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        collision_detected = False
+        if(not (len(obstacles) == 0)):
+            for obstacle in obstacles:
+                if(temp_Collision.itteract(obstacle)):
+                    collision_detected = True
+                    break
+
+        if(not collision_detected):
             super().setActorLocation(cur_Location)
-    def _Intersects(self, Location:Vector2,obstacles)->int:
-        temp_Collision = UBoxCollision(self._screen,Location[0],Location[1],self._w,self._h,'Orange')
-        # Get the current position of the player
-        player_location = temp_Collision.getCoordinates()
-        # Create a rectangle representing the player's collision box
-        player_rect = pygame.Rect(player_location[0], player_location[1], self._w, self._h)
-
-        # Check for intersection with each obstacle
-        for obstacle in obstacles:
-            # Get the collision box of the obstacle
-            obstacle_collision = obstacle.getCollision()
-
-            # Create a rectangle representing the obstacle's collision box
-            obstacle_rect = pygame.Rect(obstacle_collision.x, obstacle_collision.y, obstacle_collision.w, obstacle_collision.h)
-
-            # Check for intersection between player's and obstacle's collision boxes
-            if player_rect.colliderect(obstacle_rect):
-                dx = self._x - obstacle_rect.x
-                dy = self._y - obstacle_rect.y
-                if abs(dx) > abs(dy):
-                    if dx > 0:
-                        #right
-                        return 2
-                    else:
-                        #left
-                        return -2
-                else:
-                    if dy > 0:
-                        #top
-                        return 1
-                    else:
-                        #bottom
-                        return -1
-        return 0  # No collision
-    
-    def update(self,obstacles)->bool:
-        # Якщо анімація вибуху вже грає, продовжуємо її відтворення
-        if self._is_explosion_anim_playing:
-            self._play_explosion_animation(self._x, self._y)
-            return False  # Повертаємо False, щоб індикувати, що гравець зараз не може взаємодіяти
-
-        # Перевірка на зіткнення
-        direction = self._Intersects(super().getActorLocation(), obstacles)
-        if direction != 0:
-            # Зіткнення відбулося, і анімація вибуху ще не грає
-            self._SoundManager.playSoundCrash()
-            self._play_explosion_animation(self._x, self._y)
-            
-            # Після запуску анімації вибуху, перевіряємо, чи вона все ще грає
-            if not self._is_explosion_anim_playing:
-                # Якщо анімація завершилась, встановлюємо гравця як неактивного
-                self.is_active = False
-                return True  # Повертаємо True, щоб індикувати, що сталося зіткнення і стан гравця змінився
-        elif(direction ==2):
-            self._change_score(-3)
-            return False
-        elif(direction ==-2):
-            self._change_score(-3)
-            return False
+    def update(self,enemies:pygame.sprite.Group()):
+        for enemy in enemies:
+            if(self!=enemy):
+                if(super().Intersects(enemy)):
+                    self._SoundManager.playSoundCrash()
+                    self._play_explosion_animation(self._x,self._y)
+                    return True
         return False
-            
+    
         
 
 """
@@ -236,14 +180,28 @@ pygame.init()
 
 #initialize screen object
 screen = pygame.display.set_mode((1000,1000))
-
-all_sprites = pygame.sprite.Group()
-
+#Sprite Groups for enemies
+all_sprite = pygame.sprite.Group()
+player_actors = pygame.sprite.Group()
+bot_actors = pygame.sprite.Group()
 player = APlayer(screen,"pink-car.png",300,500,50,100)
+player1 = APlayer(screen,"pink-car.png",300,100,50,100)
 bot = Bot(screen,"pink-car.png",250,100,50,100)
-bot1 = Bot(screen,"pink-car.png",400,100,50,100)
+bot1 = Bot(screen,"pink-car.png",450,100,50,100)
+player_actors.add(player,player1)
+bot_actors.add(bot,bot1)
+all_sprite.add(player_actors,bot_actors)
+#Obstacles
+obstacles = []
+left = UBoxCollision(screen,0,0,100,1000,'Orange')
+right = UBoxCollision(screen,900,0,100,1000,'Orange')
+top = UBoxCollision(screen,100,0,900,100,'Orange')
+bottom = UBoxCollision(screen,100,800,800,100,'Orange')
+obstacles.append(right)
+obstacles.append(left)
+obstacles.append(top)
+obstacles.append(bottom)
 
-all_sprites.add(bot,bot1)
 clock = pygame.time.Clock()
 #Title
 pygame.display.set_caption("Car Racing")
@@ -260,22 +218,25 @@ while True:
             exit()
         keys = pygame.key.get_pressed()
         if keys[K_LEFT]:
-            player.MoveLeft(10, all_sprites)
+            player.MoveLeft(10,obstacles)
         if keys[K_RIGHT]:
-            player.MoveRight(10, all_sprites)
+            player.MoveRight(10,obstacles)
         if keys[K_DOWN]:
-            player.MoveDown(10, all_sprites)
+            player.MoveDown(10,obstacles)
         if keys[K_UP]:
-            player.MoveUP(10, all_sprites)
-    player.update(all_sprites)
-    for bot in all_sprites:
+            player.MoveUP(10,obstacles)
+    player.update(all_sprite)
+    for bot in bot_actors:
         bot.MoveDown(1)
     screen.fill([255, 255, 255])
     player.draw()
-    for bot in all_sprites:
+    player1.draw()
+    for bot in bot_actors:
         bot.draw()
+    for collision in obstacles:
+        collision.draw()
     #update screen
     pygame.display.update()
     clock.tick(60)
-
+    
 """
