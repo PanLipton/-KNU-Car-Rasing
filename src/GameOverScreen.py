@@ -1,6 +1,9 @@
 import pygame
 import sys
 from GameController import GameController
+from src.SoundManager.SoundManager import sound_manager
+
+
 class GameOverScreen:
     def __init__(self, screen):
         self.screen = screen
@@ -11,6 +14,7 @@ class GameOverScreen:
         self.main_menu_text = self.font.render("Press SPACE to return to Main Menu", True, self.text_color)
         self.game_over_text = self.font_large.render("Game Over", True, self.text_color)
         self.game_over_text_rect = self.game_over_text.get_rect(center=self.screen.get_rect().center)
+        sound_manager.playSoundLose()
         self.main_menu_text_rect = self.main_menu_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 100))
 
     def run(self):

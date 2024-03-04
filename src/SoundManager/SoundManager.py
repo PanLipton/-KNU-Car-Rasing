@@ -33,7 +33,7 @@ class SoundManager:
         self.sound_button = Sound(Path('../assets/music/soundButton.mp3'))
         self.sound_crash = Sound(Path('../assets/music/soundCollision.mp3'))
         self.sound_win = Sound(Path('../assets/music/soundWin.mp3'))
-
+        self.sound_lose = Sound(Path('../assets/music/soundLose.mp3'))
 
 
     def playMusicMenu(self):
@@ -52,6 +52,11 @@ class SoundManager:
 
     def playSoundWin(self):
         self.sound_win.play()
+
+    def playSoundLose(self):
+        self.sound_lose.play()
+
+
     def setMusicVolume(self, volume):
         data = struct.pack('f', volume)
         with open("../assets/bin/volume.bin","wb") as f:
