@@ -19,6 +19,7 @@ class Bot(AActor):
             #Call AActor Constructor
             super().__init__(self.screen,self.image,x,y,w,h)
             #Drawing 
+            self.rect = pygame.Rect(x, y, w, h)
         except FileNotFoundError:
             print(f"Error: File not found - {bot_image_path}")
             sys.exit(1)
