@@ -26,6 +26,7 @@ class Bot(AActor):
             #Create Box Collision
             self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
             #Drawing 
+            self.rect = pygame.Rect(x, y, w, h)
         except FileNotFoundError:
             print(f"Error: File not found - {bot_image_path}")
             sys.exit(1)
