@@ -1,4 +1,5 @@
 # GameScene.py
+import struct
 
 import pygame
 from Road.Road import Road
@@ -19,6 +20,13 @@ class GameScene:
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
         self.difficulty_increase_interval = 30000  # Інтервал збільшення складності (30 секунд)
         self.last_difficulty_increase_time = pygame.time.get_ticks()  # Останнє збільшення складності
+
+        with open("../assets/bin/volume.bin", "rb") as f:
+            data = f.read(4)
+            float_value = struct.unpack("f", data)[0]
+
+            sound_manager.setMusicVolume(float_value)
+
         sound_manager.playMusicGame()
         self.init_game()
 

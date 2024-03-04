@@ -1,6 +1,6 @@
 import pygame
 from pathlib import Path
-
+import struct
 class Sound:
     def __init__(self, file_path):
         self.sound = pygame.mixer.Sound(file_path)
@@ -53,9 +53,14 @@ class SoundManager:
     def playSoundWin(self):
         self.sound_win.play()
     def setMusicVolume(self, volume):
-
+        data = struct.pack('f', volume)
+        with open("../assets/bin/volume.bin","wb") as f:
+            f.write(data)
         self.music_game.set_volume(volume)
         self.music_menu.set_volume(volume)
+
+
+
 
     def stop_all(self):
         pygame.mixer.stop()
