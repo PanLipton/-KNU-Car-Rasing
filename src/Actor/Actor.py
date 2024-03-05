@@ -38,8 +38,10 @@ class AActor(pygame.sprite.Sprite):
         self._BoxCollision.setCoordinates(Vector2(self._x,self._y))
     def getCollision(self)->UBoxCollision:
         return self._BoxCollision
-    def Intersects(self,enemy:'AActor')->bool:
-        return self._BoxCollision.itteract(enemy.getCollision())
+    def Intersects(self, enemy: 'AActor') -> bool:
+        if self._BoxCollision is not None and enemy.getCollision() is not None:
+            return self._BoxCollision.itteract(enemy.getCollision())
+        return False
         
 
 
