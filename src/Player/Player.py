@@ -22,16 +22,27 @@ class APlayer(AActor):
 
     def __init__(self, screen, image, x, y, w, h):
         # Load Image
+
+
         try:
             self._image = pygame.image.load(image).convert_alpha()
         except FileNotFoundError:
             print(f"Error: File not found - {image}")
             sys.exit(1)
+        #try:
+            #image_surface = pygame.image.load(str(image)).convert_alpha()  # Преобразование пути в строку
+        #except FileNotFoundError:
+            #print(f"Error: File not found - {image}")
+            #sys.exit(1)
 
-        self._image = pygame.transform.scale(self._image, (w, h))
+        #image_surface = pygame.transform.scale(image_surface, (w, h))
+
+        #self._image = pygame.transform.scale(self._image, (w, h))
         self._screen = screen
         # Call AActor Constructor
         super().__init__(self._screen, self._image, x, y, w, h)
+        #super().__init__(screen, image_surface, x, y, w, h)
+        self._score = 0
         self._SoundManager = SoundManager()
         # Load explosion frames/images
         self._score = 0
@@ -94,6 +105,10 @@ class APlayer(AActor):
 
     def get_score(self) -> int:
         return self._score
+
+    def update_scores(self):
+        for player in self.players:
+            player.change_score(1)  # Обновляет счет для каждого игрока отдельно
 
     def draw_explosion(self):
         if self._is_explosion_anim_playing and self._animation_frame_index < len(self._explosion_animation):

@@ -83,7 +83,11 @@ class GameScene:
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
     def show_game_over_screen(self):
-        game_over_screen = GameOverScreen(self.screen)
+        #background_image_path = pygame.image.load("../assets/img/backgroundimg.jpg", self.players)
+        #game_over_screen = GameOverScreen(self.screen)
+        #game_over_screen.run()
+        background_image_path = '../assets/img/backgroundimg.jpg'
+        game_over_screen = GameOverScreen(self.screen, background_image_path, self.players)
         game_over_screen.run()
 
     def spawn_bot(self):

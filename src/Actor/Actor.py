@@ -6,7 +6,7 @@ from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
 
-sys.path.append("../Collision/")
+sys.path.append("../Collision")
 
 from Collision.Collision import *
 
