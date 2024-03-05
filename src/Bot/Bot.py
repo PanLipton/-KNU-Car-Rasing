@@ -3,17 +3,12 @@ from sys import exit #imort sys module
 import sys
 import os
 from pygame.locals import *
-import math  # Import the math module
 from pygame.math import Vector2
 
 sys.path.append("../Actor/")
-sys.path.append("../Collision/")
-
-from Collision.Collision import *
 from Actor.Actor import *
 
 class Bot(AActor):
-    BoxCollision=None
     
     def __init__(self,screen,image,x,y,w,h):
         #Load Image
@@ -23,8 +18,6 @@ class Bot(AActor):
             self.screen = screen
             #Call AActor Constructor
             super().__init__(self.screen,self.image,x,y,w,h)
-            #Create Box Collision
-            self.BoxCollision = UBoxCollision(self.screen,x,y,w,h,'Orange')
             #Drawing 
             self.rect = pygame.Rect(x, y, w, h)
         except FileNotFoundError:
@@ -32,17 +25,11 @@ class Bot(AActor):
             sys.exit(1)
     def draw(self):
         super().draw()
-        #Draw Collision
-        #Uncoment if you want 
-        self.BoxCollision.draw()
     #Moving Down
     def MoveDown(self,distance:int):
         cur_Location = super().getActorLocation()
         cur_Location[1]+=distance
-        self.BoxCollision.setCoordinates(cur_Location)
         super().setActorLocation(cur_Location)
-    def getCollision(self)->UBoxCollision:
-        return self.BoxCollision
 """
 #test APlayer game loop
 
