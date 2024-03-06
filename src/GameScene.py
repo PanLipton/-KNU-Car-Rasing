@@ -1,5 +1,5 @@
 # GameScene.py
-
+import struct
 import pygame
 from Road.Road import Road
 from Player.Player import APlayer
@@ -8,6 +8,8 @@ import random
 from Bot.Bot import Bot
 from pathlib import Path
 from GameRenderer import GameRenderer
+from GameOverScreen import GameOverScreen
+from SoundManager.SoundManager import sound_manager
 
 class GameScene:
     _obstacles = []
@@ -21,9 +23,18 @@ class GameScene:
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
         self.difficulty_increase_interval = 1000  # Інтервал збільшення складності (30 секунд)
         self.last_difficulty_increase_time = pygame.time.get_ticks()  # Останнє збільшення складності
+
         self.isGameEnded = False
         self.clock = pygame.time.Clock()
         self.renderer = GameRenderer(screen)
+        with open("../assets/bin/volume.bin", "rb") as f:
+            data = f.read(4)
+            float_value = struct.unpack("f", data)[0]
+
+            sound_manager.setMusicVolume(float_value)
+
+        sound_manager.playMusicGame()
+
         self.init_game()
         #Collision for Road
         #Top
@@ -40,18 +51,16 @@ class GameScene:
         self.init_road()
         self.init_players()
 
-
     def init_road(self):
         road_image_path = Path('../assets/img/road-6-lines.png')
         self.road1 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2.rect.y = -self.road2.rect.height  # Початкова позиція для другої дороги
-        
 
     def init_players(self):
         x_position = [289.3, 584.7, 1034.1]
         for i in range(self.num_players):
-            player_image_path = Path(f'../assets/cars/player-car-{i+1}.png')
+            player_image_path = Path(f'../assets/cars/player-car-{i + 1}.png')
             player = APlayer(self.screen, player_image_path, x_position[i], 500, 70, 118)
             self.players.append(player)
 
@@ -71,31 +80,34 @@ class GameScene:
             self.clock.tick(300)
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
+
+    def show_game_over_screen(self):
+        game_over_screen = GameOverScreen(self.screen)
+        game_over_screen.run()
+
     def spawn_bot(self):
         bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png", "bot-4.png", "bot-5.png", "bot-6.png"])
         random_lines_coordinates = [289.3, 432.79, 584.7, 736.6, 889.9, 1034.1]
-        
+
         for _ in range(10):  # Обмежуємо кількість спроб
             # Вибір випадкової позиції
             start_x = random.choice(random_lines_coordinates) + random.choice([-1, 1]) * random.randrange(1, 5)
-            
+
             # Створення тимчасового rect для перевірки перекриття
             temp_rect = pygame.Rect(start_x, -118, 70, 118)
-            
+
             # Перевірка на перекриття з існуючими ботами
             collision = any(temp_rect.colliderect(bot.rect) for bot in self.obstacles)
-            
+
             if not collision:
                 new_bot = Bot(self.screen, bot_model, start_x, -118, 70, 118)
                 self.obstacles.add(new_bot)
                 break
-        
 
     def check_game_end(self):
         if all(not player.is_active for player in self.players):
-            # Логіка для завершення гри, можливо, показати екран завершення гри або повернутися до головного меню
-            print("Game Over")  # Приклад простого повідомлення
-            pygame.quit()  # Це лише приклад, краще використовувати систему станів для керування грою
+            self.show_game_over_screen()  # Це лише приклад, краще використовувати систему станів для керування грою
+
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -107,12 +119,16 @@ class GameScene:
             self.spawn_delay = max(350, self.spawn_delay - 75)  # Зменшення затримки спавну, але не менше 350 мс
             self.last_difficulty_increase_time = current_time
         left_edge, right_edge = self.road1.get_edge_coordinates()
-        
+
         if current_time - self.last_spawn_time > self.spawn_delay:
             self.spawn_bot()
+
             self.last_spawn_time = current_time     
         # Керування для гравців
-        
+
+            self.last_spawn_time = current_time
+            # Керування для гравця 1
+
         if self.num_players >= 1:
             if keys[pygame.K_w]: self.players[0].MoveUP(0.7, self._obstacles)
             if keys[pygame.K_s]: self.players[0].MoveDown(0.7, self._obstacles)
@@ -144,11 +160,13 @@ class GameScene:
             self.road1.rect.y = -self.screen.get_height()
         if self.road2.rect.top >= self.screen.get_height():
             self.road2.rect.y = -self.screen.get_height()
+
         for player in self.players:
         # Перевірка на зіткнення для кожного гравця
             if player.is_active:  # Перевірка, чи активний гравець
                 player.update(all_sprites)  # Оновлення активного гравця
         self.check_game_end()
+
 
 
     def draw(self):
