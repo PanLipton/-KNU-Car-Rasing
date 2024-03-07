@@ -19,6 +19,7 @@ class GameScene:
         self.screen = screen
         self.num_players = num_players
         self.players = []  # Список гравців
+        self.gameover = GameOverScreen(self.screen, '../assets/img/backgroundimg.jpg', self.num_players)
         self.obstacles = pygame.sprite.Group()
         self.spawn_delay = 3000  # Початкова затримка спавну ботів в мілісекундах
         self.bot_speed = 1  # Початкова швидкість ботів
@@ -68,7 +69,10 @@ class GameScene:
 
     def update_scores(self):
         for player in self.players:
-            player.change_score(1)
+            if player.is_active:
+                player.change_score(1)
+                self.gameover.updateScore(self.players)
+
 
     def run(self):
         running = True
@@ -83,12 +87,7 @@ class GameScene:
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
     def show_game_over_screen(self):
-        #background_image_path = pygame.image.load("../assets/img/backgroundimg.jpg", self.players)
-        #game_over_screen = GameOverScreen(self.screen)
-        #game_over_screen.run()
-        background_image_path = '../assets/img/backgroundimg.jpg'
-        game_over_screen = GameOverScreen(self.screen, background_image_path, self.players)
-        game_over_screen.run()
+        self.gameover.run()
 
     def spawn_bot(self):
         bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png", "bot-4.png", "bot-5.png", "bot-6.png"])
