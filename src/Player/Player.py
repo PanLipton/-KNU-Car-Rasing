@@ -96,7 +96,8 @@ class APlayer(AActor):
                 if self._animation_frame_index >= len(self._explosion_animation):
                     self._is_explosion_anim_playing = False
                     self._animation_frame_index = 0
-                    self.is_active = False
+                    self.is_active = False  # Деактивувати гравця
+                    self._BoxCollision = None  # Видалити колізійний об'єкт або зробити його неактивним
 
     def change_score(self, decimal: int):
         self._score += decimal
@@ -122,9 +123,10 @@ class APlayer(AActor):
     # Drawing
     def draw(self):
         super().draw()
-
-    # Moving Up
-    def MoveUP(self, distance: int, obstacles=[]):
+    #Moving Up
+    def MoveUP(self,distance:int,obstacles=[]):
+        if self._is_explosion_anim_playing:
+            return  # Запобігти руху, якщо відтворюється анімація вибуху
         cur_Location = super().getActorLocation()
         cur_Location[1] -= distance
         temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
@@ -137,9 +139,10 @@ class APlayer(AActor):
 
         if (not collision_detected):
             super().setActorLocation(cur_Location)
-
-    # Moving Down
-    def MoveDown(self, distance: int, obstacles=[]):
+    #Moving Down
+    def MoveDown(self,distance:int,obstacles=[]):
+        if self._is_explosion_anim_playing:
+            return  # Запобігти руху, якщо відтворюється анімація вибуху
         cur_Location = super().getActorLocation()
         cur_Location[1] += distance
         temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
@@ -152,9 +155,11 @@ class APlayer(AActor):
 
         if (not collision_detected):
             super().setActorLocation(cur_Location)
-
-    # Moving Right
-    def MoveRight(self, distance: int, obstacles=[]):
+            
+    #Moving Right
+    def MoveRight(self,distance:int,obstacles=[]):
+        if self._is_explosion_anim_playing:
+            return  # Запобігти руху, якщо відтворюється анімація вибуху
         cur_Location = super().getActorLocation()
         cur_Location[0] += distance
         temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
@@ -167,9 +172,11 @@ class APlayer(AActor):
 
         if (not collision_detected):
             super().setActorLocation(cur_Location)
-
-    # Moving Left
-    def MoveLeft(self, distance: int, obstacles=[]):
+            
+    #Moving Left
+    def MoveLeft(self,distance:int,obstacles=[]):
+        if self._is_explosion_anim_playing:
+            return  # Запобігти руху, якщо відтворюється анімація вибуху
         cur_Location = super().getActorLocation()
         cur_Location[0] -= distance
         temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
@@ -182,16 +189,20 @@ class APlayer(AActor):
 
         if (not collision_detected):
             super().setActorLocation(cur_Location)
-
-    def update(self, enemies: pygame.sprite.Group()):
+    def update(self, enemies:pygame.sprite.Group()):
+        if not self.is_active:
+            return  # Не продовжувати оновлення, якщо гравець не активний
         for enemy in enemies:
-            if (self != enemy):
-                if (super().Intersects(enemy)):
+            if self != enemy and self.Intersects(enemy):
+                if not self._is_explosion_anim_playing:  # Почати анімацію, якщо ще не відтворюється
                     self._SoundManager.playSoundCrash()
                     self._play_explosion_animation(self._x, self._y)
-                    return True
-        return False
 
+        if self._is_explosion_anim_playing:
+            self._play_explosion_animation(self._x, self._y)  # Продовжувати відтворення анімації
+
+    
+        
 
 """
 #test APlayer game loop

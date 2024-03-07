@@ -12,13 +12,10 @@ class PlayerSelectionMenu(BaseMenu):
         self.create_ui()
 
     def create_ui(self):
-        positions = [(self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 90 + i * 40) for i in
-                     range(4)]
+        positions = [(self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 - 90 + i * 40) for i in range(3)]
         for i, pos in enumerate(positions, start=1):
-            self.add_button(f'{i} Player' if i == 1 else f'{i} Players', pos, lambda i=i: self.select_players(i),
-                            'no_border_button')
-        self.add_button('Back', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 + 70),
-                        self.back_action, 'no_border_button')
+            self.add_button(f'{i} Player' if i == 1 else f'{i} Players', pos, lambda i=i: self.select_players(i), 'no_border_button')
+        self.add_button('Back', (self.screen.get_width() // 2 - 100, self.screen.get_height() // 2 + 30), self.back_action, 'no_border_button')
 
     def select_players(self, num_players):
         self.menu_manager.set_num_players(num_players)
