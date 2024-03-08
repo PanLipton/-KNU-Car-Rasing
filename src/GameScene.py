@@ -19,7 +19,7 @@ class GameScene:
         self.screen = screen
         self.num_players = num_players
         self.players = []  # Список гравців
-        self.gameover = GameOverScreen(self.screen, '../assets/img/backgroundimg.jpg', self.num_players)
+        self.gameover = GameOverScreen(self.screen, '../assets/img/backgroundimg.jpg', self.players)
         self.obstacles = pygame.sprite.Group()
         self.spawn_delay = 3000  # Початкова затримка спавну ботів в мілісекундах
         self.bot_speed = 1  # Початкова швидкість ботів
@@ -71,7 +71,6 @@ class GameScene:
         for player in self.players:
             if player.is_active:
                 player.change_score(1)
-                self.gameover.updateScore(self.players)
 
 
     def run(self):
