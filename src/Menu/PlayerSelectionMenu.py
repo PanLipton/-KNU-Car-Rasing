@@ -4,6 +4,7 @@ import pygame
 from Menu.BaseMenu import BaseMenu
 from pathlib import Path
 
+
 class PlayerSelectionMenu(BaseMenu):
     def __init__(self, screen, gui_manager, menu_manager, background_image_path):
         title_font = pygame.font.Font(Path('../assets/fonts/pixel_font.ttf'), 100)
@@ -28,7 +29,7 @@ class PlayerSelectionMenu(BaseMenu):
         from GameScene import GameScene
         self.game_scene = GameScene(self.screen, num_players)
         self.game_scene.run()
-    
+
     def draw(self):
         super().draw()
         self.gui_manager.draw_ui(self.screen)
