@@ -1,5 +1,5 @@
-import pygame #imort pygame module
-from sys import exit #imort sys module
+import pygame  # imort pygame module
+from sys import exit  # imort sys module
 import sys
 import os
 from pygame.locals import *
@@ -13,25 +13,36 @@ sys.path.append('../SoundManager/')
 from Actor.Actor import *
 from SoundManager.SoundManager import *
 
+
 class APlayer(AActor):
-    #private
-    _SoundManager=None
+    # private
+    _SoundManager = None
     _score = None
     _explosion_animation = None
-    
-    
-    def __init__(self,screen,image,x,y,w,h):
-        #Load Image
+
+    def __init__(self, screen, image, x, y, w, h):
+        # Load Image
+
+
         try:
             self._image = pygame.image.load(image).convert_alpha()
         except FileNotFoundError:
             print(f"Error: File not found - {image}")
             sys.exit(1)
+        #try:
+            #image_surface = pygame.image.load(str(image)).convert_alpha()  # Преобразование пути в строку
+        #except FileNotFoundError:
+            #print(f"Error: File not found - {image}")
+            #sys.exit(1)
 
-        self._image = pygame.transform.scale(self._image, (w, h))
+        #image_surface = pygame.transform.scale(image_surface, (w, h))
+
+        #self._image = pygame.transform.scale(self._image, (w, h))
         self._screen = screen
-        #Call AActor Constructor
-        super().__init__(self._screen,self._image,x,y,w,h)
+        # Call AActor Constructor
+        super().__init__(self._screen, self._image, x, y, w, h)
+        #super().__init__(screen, image_surface, x, y, w, h)
+        self._score = 0
         self._SoundManager = SoundManager()
         # Load explosion frames/images
         self._score = 0
@@ -40,11 +51,12 @@ class APlayer(AActor):
         self._last_frame_time = None
         self._animation_frame_index = 0
         self._is_explosion_anim_playing = False
-    #Load explosion animations
+
+    # Load explosion animations
     def _load_explosion_frames(self, exp_image, frame_width, frame_height):
         self._explosion_animation = []  # Initialize the list to store explosion frames
         # Прямий шлях до зображення вибуху
-        exp_image_path = os.path.join('..','assets', 'animations', 'explosion', exp_image)
+        exp_image_path = os.path.join('..', 'assets', 'animations', 'explosion', exp_image)
         try:
             explosion_sheet = pygame.image.load(exp_image_path).convert_alpha()
             sheet_width, sheet_height = explosion_sheet.get_size()
@@ -52,14 +64,14 @@ class APlayer(AActor):
             cols = sheet_width // frame_width
             for y in range(rows):
                 for x in range(cols):
-                    frame = explosion_sheet.subsurface(pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
+                    frame = explosion_sheet.subsurface(
+                        pygame.Rect(x * frame_width, y * frame_height, frame_width, frame_height))
                     self._explosion_animation.append(frame)
         except FileNotFoundError:
             print(f"Error: File not found - {exp_image_path}")
             sys.exit(1)
 
-
-    #Play explosion animations
+    # Play explosion animations
     def _play_explosion_animation(self, player_x, player_y):
         if not self._is_explosion_anim_playing:
             self._is_explosion_anim_playing = True
@@ -70,7 +82,7 @@ class APlayer(AActor):
             if time.time() - self._last_frame_time >= 0.05:
                 frame = self._explosion_animation[self._animation_frame_index]
                 frame_rect = frame.get_rect()
-                
+
                 # Розрахунок позиції кадру так, щоб центр кадру співпадав з центром машини гравця
                 frame_x = player_x + (self._w / 2) - (frame_rect.width / 2)
                 frame_y = player_y + (self._h / 2) - (frame_rect.height / 2)
@@ -87,12 +99,18 @@ class APlayer(AActor):
                     self.is_active = False  # Деактивувати гравця
                     self._BoxCollision = None  # Видалити колізійний об'єкт або зробити його неактивним
 
-    def change_score(self,decimal:int):
-        self._score +=decimal
-        if(self._score < 0):
+    def change_score(self, decimal: int):
+        self._score += decimal
+        if (self._score < 0):
             self._score = 0
-    def get_score(self)->int:
+
+    def get_score(self) -> int:
         return self._score
+
+    def update_scores(self):
+        for player in self.players:
+            player.change_score(1)  # Обновляет счет для каждого игрока отдельно
+
     def draw_explosion(self):
         if self._is_explosion_anim_playing and self._animation_frame_index < len(self._explosion_animation):
             frame = self._explosion_animation[self._animation_frame_index]
@@ -101,74 +119,75 @@ class APlayer(AActor):
 
             self._screen.blit(frame, frame_rect.topleft)
             self._last_frame_time = pygame.time.get_ticks()
-    #Drawing 
+
+    # Drawing
     def draw(self):
         super().draw()
     #Moving Up
     def MoveUP(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
-        cur_Location[1]-=distance
-        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        cur_Location[1] -= distance
+        temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
         collision_detected = False
-        if(not (len(obstacles) == 0)):
+        if (not (len(obstacles) == 0)):
             for obstacle in obstacles:
-                if(temp_Collision.itteract(obstacle)):
+                if (temp_Collision.itteract(obstacle)):
                     collision_detected = True
                     break
 
-        if(not collision_detected):
+        if (not collision_detected):
             super().setActorLocation(cur_Location)
     #Moving Down
     def MoveDown(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
-        cur_Location[1]+=distance
-        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        cur_Location[1] += distance
+        temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
         collision_detected = False
-        if(not (len(obstacles) == 0)):
+        if (not (len(obstacles) == 0)):
             for obstacle in obstacles:
-                if(temp_Collision.itteract(obstacle)):
+                if (temp_Collision.itteract(obstacle)):
                     collision_detected = True
                     break
 
-        if(not collision_detected):
+        if (not collision_detected):
             super().setActorLocation(cur_Location)
             
     #Moving Right
     def MoveRight(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
-        cur_Location[0]+=distance
-        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        cur_Location[0] += distance
+        temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
         collision_detected = False
-        if(not (len(obstacles) == 0)):
+        if (not (len(obstacles) == 0)):
             for obstacle in obstacles:
-                if(temp_Collision.itteract(obstacle)):
+                if (temp_Collision.itteract(obstacle)):
                     collision_detected = True
                     break
 
-        if(not collision_detected):
+        if (not collision_detected):
             super().setActorLocation(cur_Location)
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
-        cur_Location[0]-=distance
-        temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
+        cur_Location[0] -= distance
+        temp_Collision = UBoxCollision(self._screen, cur_Location[0], cur_Location[1], self._w, self._h, 'Orange')
         collision_detected = False
-        if(not (len(obstacles) == 0)):
+        if (not (len(obstacles) == 0)):
             for obstacle in obstacles:
-                if(temp_Collision.itteract(obstacle)):
+                if (temp_Collision.itteract(obstacle)):
                     collision_detected = True
                     break
 
-        if(not collision_detected):
+        if (not collision_detected):
             super().setActorLocation(cur_Location)
     def update(self, enemies:pygame.sprite.Group()):
         if not self.is_active:
@@ -251,5 +270,5 @@ while True:
     #update screen
     pygame.display.update()
     clock.tick(60)
-    
+
 """

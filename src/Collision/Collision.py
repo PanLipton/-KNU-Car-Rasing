@@ -1,55 +1,60 @@
-import pygame #imort pygame module
-from sys import exit #imort sys module
+import pygame  # imort pygame module
+from sys import exit  # imort sys module
 from pygame.locals import *
 from pygame.math import Vector2
 
-#BoxCollision class: This class defines a basic collision which is uded in Character
-#To write a login on collision events
+
+# BoxCollision class: This class defines a basic collision which is uded in Character
+# To write a login on collision events
 
 class UBoxCollision(pygame.Rect):
-    #width of BoxCollision
-    w=0
-    h=0
-    #position of BoxCollision
-    x=0
-    y=0
-    #Window
-    screen=None
-    #Color
-    color=None
-    #Constructor
-    def __init__(self,screen,x,y,w,h,color):
+    # width of BoxCollision
+    w = 0
+    h = 0
+    # position of BoxCollision
+    x = 0
+    y = 0
+    # Window
+    screen = None
+    # Color
+    color = None
+
+    # Constructor
+    def __init__(self, screen, x, y, w, h, color):
         super().__init__(x, y, w, h)
-        #Size
+        # Size
         self.w = w
         self.h = h
-        #Position
+        # Position
         self.x = x
         self.y = y
-        #Color
+        # Color
         self.color = color
-        #Screen
+        # Screen
         self.screen = screen
-        #Set Width
-        self.surf = pygame.Surface((w,h))
+        # Set Width
+        self.surf = pygame.Surface((w, h))
         # Define the color of the surface
         self.surf.fill(color)
-        
-    #draw Collision (May be used in Debug mode)    
+
+    # draw Collision (May be used in Debug mode)
     def draw(self):
-        pygame.draw.rect(self.screen,self.color,self,1)
-        
-    #Check Collision itteraction
-    def itteract(self,collision:'UBoxCollision'):
+        pygame.draw.rect(self.screen, self.color, self, 1)
+
+    # Check Collision itteraction
+    def itteract(self, collision: 'UBoxCollision'):
         return self.colliderect(collision)
-    def setCoordinates(self,NewCoordinates:Vector2):
+
+    def setCoordinates(self, NewCoordinates: Vector2):
         self.x = NewCoordinates[0]
         self.y = NewCoordinates[1]
         self._updateRect()
+
     def _updateRect(self):
         # Update rectangle coordinates
         self.left = self.x
         self.top = self.y
+
 
 """
 #test Collision game loop

@@ -52,4 +52,3 @@ class SettingsMenu(BaseMenu):
         super().handle_event(event)
         if event.type == pygame.USEREVENT and event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             self.update_volume()
-
