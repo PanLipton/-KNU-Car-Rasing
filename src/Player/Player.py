@@ -106,8 +106,8 @@ class APlayer(AActor):
         super().draw()
     #Moving Up
     def MoveUP(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
         cur_Location[1]-=distance
         temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
@@ -122,8 +122,8 @@ class APlayer(AActor):
             super().setActorLocation(cur_Location)
     #Moving Down
     def MoveDown(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
         cur_Location[1]+=distance
         temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
@@ -139,8 +139,8 @@ class APlayer(AActor):
             
     #Moving Right
     def MoveRight(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
         cur_Location[0]+=distance
         temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
@@ -156,8 +156,8 @@ class APlayer(AActor):
             
     #Moving Left
     def MoveLeft(self,distance:int,obstacles=[]):
-        if self._is_explosion_anim_playing:
-            return  # Запобігти руху, якщо відтворюється анімація вибуху
+        if not self.is_active or self._BoxCollision is None or self._is_explosion_anim_playing:  # Додано перевірку на активність та існування _BoxCollision
+            return
         cur_Location = super().getActorLocation()
         cur_Location[0]-=distance
         temp_Collision = UBoxCollision(self._screen,cur_Location[0],cur_Location[1],self._w,self._h,'Orange')
