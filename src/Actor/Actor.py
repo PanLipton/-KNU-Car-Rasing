@@ -32,6 +32,7 @@ class AActor(pygame.sprite.Sprite):
 
     def draw(self):
         self._screen.blit(self._image, (self._x, self._y))
+        # Відмальовуємо колізію
         self._BoxCollision.draw()
 
     def getActorLocation(self) -> Vector2:

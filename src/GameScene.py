@@ -41,13 +41,13 @@ class GameScene:
         self.init_game()
         # Collision for Road
         # Top
-        # self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
+        self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
         # Bottom
-        # self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
+        self._obstacles.append(UBoxCollision(screen,100,screen.get_height(),screen.get_width()-100,1,'Orange'))
         # Left
-        self._obstacles.append(UBoxCollision(screen, 0, 0, 200, screen.get_height(), 'Orange'))
+        self._obstacles.append(UBoxCollision(screen, 0, 0, 240, screen.get_height(), 'Orange'))
         # Right
-        self._obstacles.append(UBoxCollision(screen, screen.get_width() - 100, 0, 200, screen.get_height(), 'Orange'))
+        self._obstacles.append(UBoxCollision(screen, screen.get_width() - 240, 0, 240, screen.get_height(), 'Orange'))
 
     def init_game(self):
         # Ініціалізація дороги
@@ -172,6 +172,7 @@ class GameScene:
     def draw(self):
         # Відмальовуємо дорогу
         self.renderer.draw_road(self.road1, self.road2)
+        # Відмальовуємо колізію
         for obstacle in self._obstacles:
             obstacle.draw()
         # Відмальовуємо гравців
