@@ -10,6 +10,8 @@ from pathlib import Path
 from GameRenderer import GameRenderer
 from GameOverScreen import GameOverScreen
 from SoundManager.SoundManager import sound_manager
+from SideRoadLeft import SideRoadLeft
+from SideRoadRight import SideRoadRight
 
 
 class GameScene:
@@ -53,12 +55,32 @@ class GameScene:
         # Ініціалізація дороги
         self.init_road()
         self.init_players()
+        self.init_side_road_left()
+        self.init_side_road_right()
 
     def init_road(self):
         road_image_path = Path('../assets/img/road-6-lines.png')
         self.road1 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2 = Road(road_image_path, self.screen.get_width(), self.screen.get_height())
         self.road2.rect.y = -self.road2.rect.height  # Початкова позиція для другої дороги
+
+    def init_side_road_left(self):
+        road_image_path = Path('../assets/img/sideroad.png')
+        self.road3 = SideRoadLeft(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road4 = SideRoadLeft(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road3.rect.left = 0  # Устанавливаем слева экрана
+        self.road3.rect.top = 0  # Устанавливаем вверху экрана
+        self.road4.rect.left = 0  # Устанавливаем слева экрана
+        self.road4.rect.top = -self.road4.rect.height  # Перемещаем за пределы экрана сверху
+
+    def init_side_road_right(self):
+        road_image_path = Path('../assets/img/sideroad.png')
+        self.road5 = SideRoadRight(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road6 = SideRoadRight(road_image_path, self.screen.get_width(), self.screen.get_height())
+        self.road5.rect.right = self.screen.get_width()  # Устанавливаем справа экрана
+        self.road5.rect.top = 0  # Устанавливаем вверху экрана
+        self.road6.rect.right = self.screen.get_width()  # Устанавливаем справа экрана
+        self.road6.rect.top = -self.road4.rect.height  # Перемещаем за пределы экрана сверху
 
     def init_players(self):
         x_position = [289.3, 584.7, 1034.1]
@@ -163,10 +185,36 @@ class GameScene:
         if self.road2.rect.top >= self.screen.get_height():
             self.road2.rect.y = -self.screen.get_height()
 
+        ##
+        self.road1.update(roadspeed)
+        self.road2.update(roadspeed)
+        # Переміщення дороги назад вгору, коли вона повністю з'являється на екрані
+        if self.road3.rect.top >= self.screen.get_height():
+            self.road3.rect.y = -self.screen.get_height()
+        if self.road4.rect.top >= self.screen.get_height():
+            self.road4.rect.y = -self.screen.get_height()
+
+        self.road3.update(roadspeed)
+        self.road4.update(roadspeed)
+
+        if self.road5.rect.top >= self.screen.get_height():
+            self.road5.rect.y = -self.screen.get_height()
+        if self.road6.rect.top >= self.screen.get_height():
+            self.road6.rect.y = -self.screen.get_height()
+
+        self.road5.update(roadspeed)
+        self.road6.update(roadspeed)
+        ##
+
+
         for player in self.players:
             # Перевірка на зіткнення для кожного гравця
             if player.is_active:  # Перевірка, чи активний гравець
                 player.update(all_sprites)  # Оновлення активного гравця
+
+        #if hasattr(self, 'side_road_left'):
+            #self.side_road_left.update(speed=1)  # Указываем скорость движения дороги вниз
+        # другие обновления
         self.check_game_end()
 
     def draw(self):
@@ -180,6 +228,22 @@ class GameScene:
         self.renderer.draw_explosions(self.players)
         # Відмальовуємо інші елементи гри
         self.renderer.draw_bots(self.obstacles)
+
+        self.renderer.draw_road(self.road3, self.road4)
+        for obstacle in self._obstacles:
+            obstacle.draw()
+
+        self.renderer.draw_road(self.road5, self.road6)
+        for obstacle in self._obstacles:
+            obstacle.draw()
+
+
+
+
+        #if hasattr(self, 'side_road_left'):
+            #side_road_surface = pygame.transform.scale(self.side_road_left.image,
+                                                      # (self.screen.get_width() // 6, self.screen.get_height()))
+           # self.screen.blit(side_road_surface, (0, 0))
 
 
 
