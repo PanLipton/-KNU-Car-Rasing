@@ -7,7 +7,8 @@ from SoundManager.SoundManager import sound_manager
 
 
 class GameController:
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         pygame.init()
         self.screen = pygame.display.set_mode((1366, 900))
         pygame.display.set_caption('Car Racing')
