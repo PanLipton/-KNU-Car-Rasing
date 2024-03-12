@@ -2,6 +2,7 @@ import pygame  # imort pygame module
 from sys import exit  # imort sys module
 from pygame.locals import *
 from pygame.math import Vector2
+from config import DEBUG
 
 
 # BoxCollision class: This class defines a basic collision which is uded in Character
@@ -39,8 +40,9 @@ class UBoxCollision(pygame.Rect):
 
     # draw Collision (May be used in Debug mode)
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, self, 1)
-
+        if DEBUG:
+            pygame.draw.rect(self.screen, self.color, self, 1)
+            
     # Check Collision itteraction
     def itteract(self, collision: 'UBoxCollision'):
         return self.colliderect(collision)

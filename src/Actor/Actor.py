@@ -5,6 +5,7 @@ import os
 from pygame.locals import *
 import math  # Import the math module
 from pygame.math import Vector2
+from config import DEBUG
 
 sys.path.append("../Collision")
 
@@ -33,7 +34,8 @@ class AActor(pygame.sprite.Sprite):
     def draw(self):
         self._screen.blit(self._image, (self._x, self._y))
         # Відмальовуємо колізію
-        self._BoxCollision.draw()
+        if DEBUG:
+            self._BoxCollision.draw()
 
     def getActorLocation(self) -> Vector2:
         return Vector2(self._x, self._y)
