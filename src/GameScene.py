@@ -8,7 +8,7 @@ import random
 from Bot.Bot import Bot
 from pathlib import Path
 from GameRenderer import GameRenderer
-from GameOverScreen import GameOverScreen
+from Menu.GameOverScreen import GameOverScreen
 from SoundManager.SoundManager import sound_manager
 
 
