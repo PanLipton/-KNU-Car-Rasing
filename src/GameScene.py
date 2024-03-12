@@ -8,7 +8,7 @@ import random
 from Bot.Bot import Bot
 from pathlib import Path
 from GameRenderer import GameRenderer
-from GameOverScreen import GameOverScreen
+from Menu.GameOverScreen import GameOverScreen
 from SoundManager.SoundManager import sound_manager
 from SideRoadLeft import SideRoadLeft
 from SideRoadRight import SideRoadRight
@@ -23,6 +23,7 @@ class GameScene:
         self.players = []  # Список гравців
         self.gameover = GameOverScreen(self.screen, '../assets/img/backgroundimg.jpg', self.players)
         self.obstacles = pygame.sprite.Group()
+
         self.spawn_delay = 3000  # Початкова затримка спавну ботів в мілісекундах
         self.bot_speed = 1  # Початкова швидкість ботів
         self.last_spawn_time = pygame.time.get_ticks()  # Останній час спавну
@@ -32,6 +33,9 @@ class GameScene:
         self.isGameEnded = False
         self.clock = pygame.time.Clock()
         self.renderer = GameRenderer(screen)
+        self.init_game()
+
+    def init_game(self):
         with open("../assets/bin/volume.bin", "rb") as f:
             data = f.read(4)
             float_value = struct.unpack("f", data)[0]
@@ -40,23 +44,18 @@ class GameScene:
 
         sound_manager.playMusicGame()
 
-        self.init_game()
-        # Collision for Road
-        # Top
-        # self._obstacles.append(UBoxCollision(screen,100,0,screen.get_width()-100,1,'Orange'))
-        # Bottom
-        # self._obstacles.append(UBoxCollision(screen,100,screen.get_width()-100,screen.get_width()-100,1,'Orange'))
-        # Left
-        self._obstacles.append(UBoxCollision(screen, 0, 0, 200, screen.get_height(), 'Orange'))
-        # Right
-        self._obstacles.append(UBoxCollision(screen, screen.get_width() - 100, 0, 200, screen.get_height(), 'Orange'))
-
-    def init_game(self):
-        # Ініціалізація дороги
         self.init_road()
+        self.init_road_collision()
         self.init_players()
         self.init_side_road_left()
         self.init_side_road_right()
+
+    def init_road_collision(self):
+        self._obstacles.append(UBoxCollision(self.screen, 100, 0, self.screen.get_width()-100, 1, 'Orange')) # Верхня сторона
+        self._obstacles.append(UBoxCollision(self.screen, 100, self.screen.get_height(), self.screen.get_width()-100, 1, 'Orange')) # Нижня сторона
+        self._obstacles.append(UBoxCollision(self.screen, 0, 0, 240, self.screen.get_height(), 'Orange')) # Ліва сторона
+        self._obstacles.append(UBoxCollision(self.screen, self.screen.get_width() - 240, 0, 240, self.screen.get_height(), 'Orange')) # Права сторона
+
 
     def init_road(self):
         road_image_path = Path('../assets/img/road-6-lines.png')
@@ -107,9 +106,6 @@ class GameScene:
             self.clock.tick(300)
             pygame.display.flip()  # Оновлення вмісту вікна на екрані
 
-    def show_game_over_screen(self):
-        self.gameover.run()
-
     def spawn_bot(self):
         bot_model = random.choice(["bot-1.png", "bot-2.png", "bot-3.png", "bot-4.png", "bot-5.png", "bot-6.png"])
         random_lines_coordinates = [289.3, 432.79, 584.7, 736.6, 889.9, 1034.1]
@@ -131,7 +127,7 @@ class GameScene:
 
     def check_game_end(self):
         if all(not player.is_active for player in self.players):
-            self.show_game_over_screen()  # Це лише приклад, краще використовувати систему станів для керування грою
+            self.gameover.run() 
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -220,6 +216,7 @@ class GameScene:
     def draw(self):
         # Відмальовуємо дорогу
         self.renderer.draw_road(self.road1, self.road2)
+        # Відмальовуємо колізію
         for obstacle in self._obstacles:
             obstacle.draw()
         # Відмальовуємо гравців
