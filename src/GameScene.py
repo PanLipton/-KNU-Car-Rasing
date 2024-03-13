@@ -53,8 +53,8 @@ class GameScene:
     def init_road_collision(self):
         self._obstacles.append(UBoxCollision(self.screen, 100, 0, self.screen.get_width()-100, 1, 'Orange')) # Верхня сторона
         self._obstacles.append(UBoxCollision(self.screen, 100, self.screen.get_height(), self.screen.get_width()-100, 1, 'Orange')) # Нижня сторона
-        self._obstacles.append(UBoxCollision(self.screen, 0, 0, 240, self.screen.get_height(), 'Orange')) # Ліва сторона
-        self._obstacles.append(UBoxCollision(self.screen, self.screen.get_width() - 240, 0, 240, self.screen.get_height(), 'Orange')) # Права сторона
+        self._obstacles.append(UBoxCollision(self.screen, 0, 0, 240, self.screen.get_height(), 'Red')) # Ліва сторона
+        self._obstacles.append(UBoxCollision(self.screen, self.screen.get_width() - 240, 0, 240, self.screen.get_height(), 'Red')) # Права сторона
 
 
     def init_road(self):

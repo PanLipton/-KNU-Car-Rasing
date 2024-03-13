@@ -41,7 +41,7 @@ class UBoxCollision(pygame.Rect):
     # draw Collision (May be used in Debug mode)
     def draw(self):
         if DEBUG:
-            pygame.draw.rect(self.screen, self.color, self, 1)
+            pygame.draw.rect(self.screen, self.color, self, 2)
             
     # Check Collision itteraction
     def itteract(self, collision: 'UBoxCollision'):
