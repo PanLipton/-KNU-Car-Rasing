@@ -80,28 +80,33 @@ def test_game_scene_player_movement_handling():
     screen.get_height.return_value = 600
 
     with patch('GameScene.Road') as MockRoad, \
-         patch('GameScene.Player') as MockPlayer:  # Мокуємо клас гравця
+         patch('Player.Player') as MockPlayer:
         mock_road_instance = MockRoad.return_value
         mock_road_instance.rect.top = 400
         mock_road_instance.screen_height = 600
         mock_road_instance.get_edge_coordinates.return_value = (100, 700)
 
         mock_player_instance = MockPlayer.return_value
-        mock_player_instance.rect = MagicMock(x=100, y=100)  # Припустиме початкове положення гравця
+        mock_player_instance.rect = MagicMock(x=100, y=100)
 
         game_scene = GameScene(screen, 1)
+        game_scene.players = [mock_player_instance]
+
         game_scene.road1.rect.top = 400
         game_scene.road2.rect.top = 400
-
-        player_initial_x = game_scene.players[0].rect.x  # Тепер це має працювати без помилок
-        player_initial_y = game_scene.players[0].rect.y
+        game_scene.road3.rect.top = 400
+        # Мокуємо road4 тільки якщо вона існує в GameScene
+        if hasattr(game_scene, 'road4'):
+            game_scene.road4 = MockRoad.return_value
+            game_scene.road4.rect.top = 400
 
         with patch('pygame.event.get') as mock_get, \
              patch('pygame.display.flip'):
             mock_get.return_value = [MagicMock(type=pygame.QUIT)]
-            game_scene.run_one_frame()
+            game_scene.update()  # Запуск одного кадру оновлення
 
-            # Тепер можна перевірити, чи змінилися координати гравця після виконання run_one_frame()
+
+
 
 
 
