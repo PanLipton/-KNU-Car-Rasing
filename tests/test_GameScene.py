@@ -7,7 +7,6 @@ import sys
 # Додаємо шлях до директорії з кодом, який потрібно протестувати
 global_dir = Path(__file__).parent.parent / 'src'
 sys.path.append(str(global_dir))
-# Додаємо шлях до директорії з кодом, який потрібно протестувати
 from GameScene import GameScene
 
 @pytest.fixture(autouse=True)
@@ -29,7 +28,6 @@ def mock_pygame():
          patch('pygame.key.get_pressed', return_value=[False] * 300), \
          patch('pygame.event.get', return_value=[]):  # Мок для подій, щоб уникнути зациклювання у тесті
         yield
-
 
 @pytest.fixture(autouse=True)
 def mock_file_io():
@@ -105,8 +103,11 @@ def test_game_scene_player_movement_handling():
             mock_get.return_value = [MagicMock(type=pygame.QUIT)]
             game_scene.update()  # Запуск одного кадру оновлення
 
+def test_game_scene_obstacle_spawn_logic():
+    screen = MagicMock()
+    screen.get_width.return_value = 800
+    screen.get_height.return_value = 600
 
-
-
-
-
+    with patch('GameScene.Road') as MockRoad, \
+            patch('Bot.Bot') as MockBot:
+        MockRoad.return_value
