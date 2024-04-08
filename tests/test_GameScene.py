@@ -68,7 +68,7 @@ def test_game_scene_event_handling():
             game_scene.road3.rect.top = 400
 
         with patch('pygame.event.get') as mock_get, \
-             patch('pygame.display.flip'):  # Замокати pygame.display.flip, щоб уникнути помилки ініціалізації
+             patch('pygame.display.flip'):  
             mock_get.return_value = [MagicMock(type=pygame.QUIT)]
             game_scene.run()
 
@@ -93,7 +93,6 @@ def test_game_scene_player_movement_handling():
         game_scene.road1.rect.top = 400
         game_scene.road2.rect.top = 400
         game_scene.road3.rect.top = 400
-        # Мокуємо road4 тільки якщо вона існує в GameScene
         if hasattr(game_scene, 'road4'):
             game_scene.road4 = MockRoad.return_value
             game_scene.road4.rect.top = 400
