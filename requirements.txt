@@ -74,7 +74,6 @@ kornia==0.6.7
 lark==1.1.2
 lazy_loader==0.3
 lightning-utilities==0.11.2
-llvmlite==0.42.0
 lmdb==1.4.1
 lpips==0.1.4
 Markdown==3.6
