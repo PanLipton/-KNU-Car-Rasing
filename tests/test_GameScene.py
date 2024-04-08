@@ -4,13 +4,30 @@ from unittest.mock import patch, MagicMock, mock_open
 from pathlib import Path
 import sys
 
-# Додаємо шлях до директорії з кодом, який потрібно протестувати
 global_dir = Path(__file__).parent.parent / 'src'
 sys.path.append(str(global_dir))
 from GameScene import GameScene
 
 @pytest.fixture(autouse=True)
 def mock_pygame():
+    mock_surface = MagicMock()
+    mock_surface.convert.return_value = mock_surface
+    mock_surface.convert_alpha.return_value = mock_surface
+    mock_surface.get_size.return_value = (800, 600)
+    mock_surface.get_width.return_value = 800
+    mock_surface.get_height.return_value = 600
+
+    with patch('pygame.Surface', return_value=mock_surface), \
+         patch('pygame.image.load', return_value=mock_surface), \
+         patch('pygame.display.set_mode', return_value=mock_surface), \
+         patch('pygame.display.init'), \
+         patch('pygame.font.Font', return_value=MagicMock()), \
+         patch('pygame.sprite.Group', return_value=MagicMock()), \
+         patch('pygame.transform.scale', return_value=mock_surface), \
+         patch('pygame.key.get_pressed', return_value=[False] * 300), \
+         patch('pygame.event.get', return_value=[]), \
+         patch('pygame.mixer.init'):  # Додайте цей рядок для моку pygame.mixer.init()
+        yield
     mock_surface = MagicMock()
     mock_surface.convert.return_value = mock_surface
     mock_surface.convert_alpha.return_value = mock_surface
