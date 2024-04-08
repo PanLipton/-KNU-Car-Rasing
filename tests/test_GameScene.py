@@ -110,3 +110,5 @@ def test_game_scene_obstacle_spawn_logic():
     with patch('GameScene.Road') as MockRoad, \
             patch('Bot.Bot') as MockBot:
         MockRoad.return_value
+
+# тест
