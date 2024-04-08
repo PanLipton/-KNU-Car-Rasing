@@ -24,7 +24,7 @@ jobs:
 
     - name: Run tests with Pytest
       run: |
-        pytest ./test_GameScene.py
+        pytest ./tests/test_GameScene.py
     
     - name: Run Flake8
       continue-on-error: true
