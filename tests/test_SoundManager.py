@@ -58,13 +58,18 @@ def test_play_methods(sound_manager_instance, mocker, play_method):
     mock_play_method_mock.assert_called_once()
 
 
-# Проверяем наличие Pygame перед импортом класса SoundManager
-@patch('SoundManager.SoundManager.pygame', pygame)
-def test_sound_manager_creation():
-    # Проверяем наличие Pygame перед созданием экземпляра SoundManager
+# Тест для проверки инициализации SoundManager в условиях отсутствия аудиоустройства
+@patch('SoundManager.SoundManager.pygame.mixer.init')
+def test_sound_manager_initialization_no_audio(mock_init):
+    # Проверяем наличие Pygame перед выполнением теста
     if pygame is None:
         pytest.skip("Pygame is not installed, skipping test.")
 
-    # Создаем экземпляр SoundManager
+    # Инициализация SoundManager
     sound_manager = SoundManager()
-    assert sound_manager is not None
+
+    # Проверяем, что pygame.mixer.init() вызывается
+    mock_init.assert_called_once()
+
+    # Проверяем, что sound_enabled устанавливается в False
+    assert sound_manager.sound_enabled == False
