@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a0d5e60-af05-4d73-be68-d30cb98ed5e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/-KNU-Car-Rasing.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/bin/volume.bin" beforeDir="false" afterPath="$PROJECT_DIR$/assets/bin/volume.bin" afterDir="false" />
-    </list>
+    <list default="true" id="3a0d5e60-af05-4d73-be68-d30cb98ed5e7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,7 +104,7 @@
       <workItem from="1710275201938" duration="204000" />
       <workItem from="1710275417772" duration="566000" />
       <workItem from="1710313140314" duration="701000" />
-      <workItem from="1712689557956" duration="4290000" />
+      <workItem from="1712689557956" duration="5081000" />
     </task>
     <servers />
   </component>
