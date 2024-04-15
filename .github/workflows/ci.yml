@@ -25,7 +25,11 @@ jobs:
     - name: Run tests with Pytest
       run: |
         pytest ./tests/test_GameScene.py
+
         pytest ./tests/test_SoundManager.py
+
+        pytest ./tests/test_AActor.py
+        
     
     - name: Run Flake8
       continue-on-error: true
