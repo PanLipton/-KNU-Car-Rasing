@@ -4,6 +4,7 @@ import sys
 import os
 from pygame.locals import *
 from pygame.math import Vector2
+from PIL import Image
 
 sys.path.append("../Actor/")
 from Actor.Actor import *
@@ -13,9 +14,15 @@ class Bot(AActor):
 
     def __init__(self, screen, image, x, y, w, h):
         # Load Image
-        bot_image_path = os.path.join('..', 'assets', 'cars', image)
+        bot_image_path = os.path.join('assets', 'cars', image)
         try:
-            self.image = pygame.image.load(bot_image_path).convert_alpha()
+            # Load the image using PIL (Python Imaging Library)
+            with Image.open(bot_image_path) as img:
+                # Convert the image to RGBA format
+                img_rgba = img.convert("RGBA")
+                # Convert the PIL image to a pygame surface
+                self.image = pygame.image.fromstring(img_rgba.tobytes(), img_rgba.size, img_rgba.mode)
+            
             self.screen = screen
             # Call AActor Constructor
             super().__init__(self.screen, self.image, x, y, w, h)
