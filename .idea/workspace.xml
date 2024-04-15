@@ -108,7 +108,7 @@
       <workItem from="1710275417772" duration="566000" />
       <workItem from="1710313140314" duration="701000" />
       <workItem from="1712689557956" duration="5081000" />
-      <workItem from="1713175637777" duration="829000" />
+      <workItem from="1713175637777" duration="1522000" />
     </task>
     <servers />
   </component>
@@ -131,7 +131,7 @@
     <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$pytest_in_SoundManager_py.coverage" NAME="pytest in SoundManager.py Coverage Results" MODIFIED="1712690508350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/SoundManager" />
     <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$Player.coverage" NAME="Player Coverage Results" MODIFIED="1709845153428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Player" />
     <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$GameOverScreen.coverage" NAME="GameOverScreen Coverage Results" MODIFIED="1710099824265" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$pytest_in_test_SoundManager_py.coverage" NAME="pytest in test_SoundManager.py Coverage Results" MODIFIED="1712693772236" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$pytest_in_test_SoundManager_py.coverage" NAME="pytest in test_SoundManager.py Coverage Results" MODIFIED="1713177159320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$main.coverage" NAME="main Coverage Results" MODIFIED="1712689679594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/_KNU_Car_Rasing$pytest_in_test_GameOverScreen_py.coverage" NAME="pytest in test_GameOverScreen.py Coverage Results" MODIFIED="1712692894047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
