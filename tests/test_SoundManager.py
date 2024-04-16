@@ -13,19 +13,18 @@ from SoundManager.SoundManager import SoundManager
 
 @pytest.fixture
 def sound_manager(monkeypatch, tmp_path):
-    # Создаем замоканные объекты для тестирования
-    test_dir = tmp_path / "test_data"
-    test_dir.mkdir()
+    # Получаем путь к файлу volume.bin внутри репозитория
+    volume_bin_path = Path(__file__).resolve().parent.parent / "assets" / "bin" / "volume.bin"
 
-    # Копируем файл volume.bin из репозитория во временную директорию для тестов
-    source_file = Path(__file__).resolve().parent.parent / "assets" / "bin" / "volume.bin"
-    shutil.copy(source_file, test_dir)
-
+    # Мокаем объекты для звуков
     sound_manager = SoundManager()
     sound_manager.music_game = MagicMock()
     sound_manager.music_menu = MagicMock()
     sound_manager.sound_win = MagicMock()
     sound_manager.sound_lose = MagicMock()
+
+    # Переопределяем путь к файлу volume.bin для SoundManager
+    sound_manager.volume_bin_path = volume_bin_path
     return sound_manager
 
 # Тесты для метода setMusicVolume
