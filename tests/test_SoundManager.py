@@ -16,7 +16,11 @@ def sound_manager(monkeypatch, tmp_path):
     # Создаем замоканные объекты для тестирования
     test_dir = tmp_path / "test_data"
     test_dir.mkdir()
-    shutil.copy("../assets/bin/volume.bin", test_dir)
+
+    # Копируем файл volume.bin из репозитория во временную директорию для тестов
+    source_file = Path(__file__).resolve().parent.parent / "assets" / "bin" / "volume.bin"
+    shutil.copy(source_file, test_dir)
+
     sound_manager = SoundManager()
     sound_manager.music_game = MagicMock()
     sound_manager.music_menu = MagicMock()
