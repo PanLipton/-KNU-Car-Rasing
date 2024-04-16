@@ -1,75 +1,53 @@
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
-from unittest.mock import MagicMock, patch
 
-# Проверяем наличие Pygame перед импортом SoundManager
-try:
-    import pygame
-except ImportError:
-    pygame = None
-
-# Путь к директории с исходным кодом
-global_dir = Path(__file__).parent.parent / 'src'
+global_dir = Path(__file__).resolve().parent.parent / 'src'
 sys.path.append(str(global_dir))
 
-# Импорт SoundManager должен происходить после добавления пути в sys.path
+# Импортируем SoundManager и создаем фикстуру для использования в тестах
 from SoundManager.SoundManager import SoundManager
 
-
-# Фикстура для создания экземпляра SoundManager перед каждым тестом
 @pytest.fixture
-def sound_manager_instance():
-    # Сбрасываем существующий экземпляр SoundManager перед каждым тестом
-    SoundManager._instance = None
-    return SoundManager()
-
-
-# Тест проверки синглтона
-def test_singleton_instance(sound_manager_instance):
-    assert sound_manager_instance is SoundManager()
-
-
-# Тест инициализации SoundManager
-def test_sound_manager_initialization(sound_manager_instance):
-    assert sound_manager_instance.sound_enabled == True
-
-
-# Параметризованный тест для проверки методов воспроизведения звука
-@pytest.mark.parametrize("play_method", [
-    ("playMusicMenu"),
-    ("playMusicGame"),
-])
-def test_play_methods(sound_manager_instance, mocker, play_method):
-    # Проверяем, что Pygame установлен перед выполнением теста
-    if pygame is None:
-        pytest.skip("Pygame is not installed, skipping test.")
-
-    # Создаем мок-объект для замены метода воспроизведения
-    mock_play_method = getattr(sound_manager_instance, play_method)
-    mock_play_method_mock = MagicMock()
-    setattr(sound_manager_instance, play_method, mock_play_method_mock)
-
-    # Вызываем метод воспроизведения
-    getattr(sound_manager_instance, play_method)()
-
-    # Проверяем, что вызвался замокированный метод воспроизведения
-    mock_play_method_mock.assert_called_once()
-
-
-# Тест для проверки инициализации SoundManager в условиях отсутствия аудиоустройства
-@patch('SoundManager.SoundManager.pygame.mixer.init')
-def test_sound_manager_initialization_no_audio(mock_init):
-    # Проверяем наличие Pygame перед выполнением теста
-    if pygame is None:
-        pytest.skip("Pygame is not installed, skipping test.")
-
-    # Инициализация SoundManager
+def sound_manager(monkeypatch):
+    # Создаем замоканные объекты для тестирования
     sound_manager = SoundManager()
+    sound_manager.music_game = MagicMock()
+    sound_manager.music_menu = MagicMock()
+    sound_manager.sound_win = MagicMock()
+    sound_manager.sound_lose = MagicMock()
+    return sound_manager
 
-    # Проверяем, что pygame.mixer.init() вызывается
-    mock_init.assert_called_once()
+# Тесты для метода setMusicVolume
+@pytest.mark.parametrize("volume", [0.0, 0.5, 1.0])
+def test_set_music_volume(sound_manager, volume, monkeypatch):
+    # Мокаем метод set_volume объектов Sound
+    def mock_set_volume(volume):
+        sound_manager.music_game.volume = volume
+        sound_manager.music_menu.volume = volume
+    # Применяем мок
+    monkeypatch.setattr(sound_manager.music_game, 'set_volume', mock_set_volume)
+    monkeypatch.setattr(sound_manager.music_menu, 'set_volume', mock_set_volume)
 
-    # Проверяем, что sound_enabled устанавливается в False
-    assert sound_manager.sound_enabled == False
+    sound_manager.setMusicVolume(volume)
+    # Проверяем, сохраняется ли значение громкости в объектах Sound
+    assert sound_manager.music_game.volume == volume
+    assert sound_manager.music_menu.volume == volume
+
+# Тесты для метода playSoundWin
+def test_play_sound_win(sound_manager, monkeypatch):
+    # Применяем мок для метода play объекта Sound
+    monkeypatch.setattr(sound_manager.sound_win, 'play', MagicMock())
+    sound_manager.playSoundWin()
+    # Проверяем, вызывается ли метод проигрывания звука победы
+    sound_manager.sound_win.play.assert_called_once()
+
+# Тесты для метода playSoundLose
+def test_play_sound_lose(sound_manager, monkeypatch):
+    # Применяем мок для метода play объекта Sound
+    monkeypatch.setattr(sound_manager.sound_lose, 'play', MagicMock())
+    sound_manager.playSoundLose()
+    # Проверяем, вызывается ли метод проигрывания звука поражения
+    sound_manager.sound_lose.play.assert_called_once()

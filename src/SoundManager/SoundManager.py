@@ -5,12 +5,16 @@ import struct
 class Sound:
     def __init__(self, file_path):
         self.sound = pygame.mixer.Sound(file_path)
+        self.volume = 1.0
 
     def play(self):
         pygame.mixer.Sound.play(self.sound)
 
     def set_volume(self, volume):
         self.sound.set_volume(volume)
+
+    def get_volume(self):
+        return self.volume
 
 class SoundManager:
     _instance = None
