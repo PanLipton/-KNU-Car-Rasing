@@ -1,3 +1,4 @@
+import shutil
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -11,8 +12,11 @@ sys.path.append(str(global_dir))
 from SoundManager.SoundManager import SoundManager
 
 @pytest.fixture
-def sound_manager(monkeypatch):
+def sound_manager(monkeypatch, tmp_path):
     # Создаем замоканные объекты для тестирования
+    test_dir = tmp_path / "test_data"
+    test_dir.mkdir()
+    shutil.copy("../assets/bin/volume.bin", test_dir)
     sound_manager = SoundManager()
     sound_manager.music_game = MagicMock()
     sound_manager.music_menu = MagicMock()
