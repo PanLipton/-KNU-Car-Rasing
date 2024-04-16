@@ -13,8 +13,8 @@ from SoundManager.SoundManager import SoundManager
 
 @pytest.fixture
 def sound_manager(monkeypatch):
-    # Создаем замоканные объекты для тестирования
     sound_manager = SoundManager()
+    monkeypatch.setattr(sound_manager, 'sound_enabled', True)  
     sound_manager.music_game = MagicMock()
     sound_manager.music_menu = MagicMock()
     sound_manager.sound_win = MagicMock()
@@ -23,9 +23,9 @@ def sound_manager(monkeypatch):
 
 @pytest.mark.parametrize("volume", [0.0, 0.5, 1.0])
 def test_set_music_volume(sound_manager, volume, monkeypatch):
-    # Проверяем наличие файла volume.bin
-    volume_bin_path = "../assets/bin/volume.bin"
-    assert os.path.exists(volume_bin_path), f"File not found: {volume_bin_path}"
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    VOLUME_BIN_PATH = BASE_DIR / 'assets' / 'bin' / 'volume.bin'
+    assert os.path.exists(VOLUME_BIN_PATH), f"File not found: {VOLUME_BIN_PATH}"
 
     # Применяем мок метода set_volume объектов Sound
     monkeypatch.setattr(sound_manager.music_game, 'set_volume', MagicMock())
