@@ -31,10 +31,14 @@ def mock_pygame():
         yield
 
 
+# Assuming SideRoadLeft class has a method named load_image to load an image
 @patch('pygame.image.load', return_value=MagicMock())
 @pytest.mark.image_loading
-def test_image_loading(mock_load, side_road):
-    side_road.load_image("../assets/img/sideroad.png")
+def test_image_loading(mock_load):
+    # Create a SideRoadLeft instance
+    side_road = SideRoadLeft("../assets/img/sideroad.png", 800, 600)
+
+    # Assert that pygame.image.load is called with the correct path during initialization
     mock_load.assert_called_once_with("../assets/img/sideroad.png")
 
 @pytest.fixture
