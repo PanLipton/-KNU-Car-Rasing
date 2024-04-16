@@ -30,6 +30,10 @@ jobs:
 
         pytest ./tests/test_AActor.py
         
+        pytest ./tests/test_Bot.py
+        pytest ./tests/test_Collision.py
+        pytest ./tests/test_Player.py
+
     
     - name: Run Flake8
       continue-on-error: true
