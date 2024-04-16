@@ -25,6 +25,7 @@ def sound_manager(monkeypatch):
 def test_set_music_volume(sound_manager, volume, monkeypatch):
     BASE_DIR = Path(__file__).resolve().parent.parent
     VOLUME_BIN_PATH = BASE_DIR / 'assets' / 'bin' / 'volume.bin'
+    
     assert os.path.exists(VOLUME_BIN_PATH), f"File not found: {VOLUME_BIN_PATH}"
 
     # Применяем мок метода set_volume объектов Sound

@@ -1,6 +1,8 @@
 import pygame
 from pathlib import Path
 import struct
+import os
+from pathlib import Path
 
 class Sound:
     def __init__(self, file_path):
@@ -14,6 +16,8 @@ class Sound:
 
 class SoundManager:
     _instance = None
+    BASE_DIR = Path(__file__).resolve().parent.parent.parent
+    VOLUME_BIN_PATH = BASE_DIR / 'assets' / 'bin' / 'volume.bin'
 
     def __new__(cls):
         if cls._instance is None:
@@ -70,7 +74,7 @@ class SoundManager:
 
     def setMusicVolume(self, volume):
         data = struct.pack('f', volume)
-        with open("../assets/bin/volume.bin","wb") as f:
+        with open(self.VOLUME_BIN_PATH, "wb") as f:
             f.write(data)
         if self.sound_enabled:
             self.music_game.set_volume(volume)
