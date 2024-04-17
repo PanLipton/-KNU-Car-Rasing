@@ -9,28 +9,36 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
+        pip install pytest-html flake8-html
     - name: Run tests with Pytest
       run: |
-        pytest ./tests/test_GameScene.py
-        pytest ./tests/test_AActor.py
-        pytest ./tests/test_Bot.py
-        pytest ./tests/test_Collision.py
-        pytest ./tests/test_Player.py
-        pytest ./tests/test_SoundManager.py
+        pytest ./tests/test_GameScene.py --html=test_report_GameScene.html
+        pytest ./tests/test_AActor.py --html=test_report_AActor.html
+        pytest ./tests/test_Bot.py --html=test_report_Bot.html
+        pytest ./tests/test_Collision.py --html=test_report_Collision.html
+        pytest ./tests/test_Player.py --html=test_report_Player.html
+        pytest ./tests/test_SoundManager.py --html=test_report_SoundManager.html
     - name: Run Flake8
       continue-on-error: true
       run: |
-        flake8 ./src        
+        flake8 ./src --format=html --htmldir=flake8_report
+    - name: Upload test reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: test_report_*.html
+    - name: Upload lint report
+      uses: actions/upload-artifact@v2
+      with:
+        name: lint-report
+        path: flake8_report/
