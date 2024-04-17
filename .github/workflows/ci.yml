@@ -28,6 +28,9 @@ jobs:
         pytest ./tests/test_Collision.py --html=test_report_Collision.html
         pytest ./tests/test_Player.py --html=test_report_Player.html
         pytest ./tests/test_SoundManager.py --html=test_report_SoundManager.html
+        pytest ./tests/test_SideRoadLeft.py --html=test_report_SideRoadLeft.html
+        pytest ./tests/test_SideRoadRight.py --html=test_report_SideRoadRight.html
+        pytest ./tests/test_BaseMenu.py --html=test_report_BaseMenu.html
     - name: Run Flake8
       continue-on-error: true
       run: |
